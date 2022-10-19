@@ -1,0 +1,30 @@
+.dd-item>button {
+    z-index: 99;
+    margin-top: 10px;
+}
+
+.dd-handle {
+    height: auto;
+    padding: 0px;
+    background: white;
+    font-weight: normal;
+    /* border: 0px; */
+    color: #8c7f7f;
+    border-color: #d7e2e9;
+}
+
+.dd-collapsed .dd-expand {
+    padding-top: 8px;
+}
+
+.dd {
+    max-width: 100%;
+}
+
+.item {
+    cursor: pointer;
+}
+
+.bold {
+    font-weight: bold;
+}

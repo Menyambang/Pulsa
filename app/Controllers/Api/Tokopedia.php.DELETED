@@ -1,0 +1,190 @@
+<?php namespace App\Controllers\Api;
+
+use Firebase\JWT\JWT;
+use Psr\Log\LoggerInterface;
+use App\Libraries\TokopediaApi;
+use Firebase\JWT\ExpiredException;
+use CodeIgniter\HTTP\RequestInterface;
+use Firebase\JWT\BeforeValidException;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
+use Firebase\JWT\SignatureInvalidException;
+
+/**
+ * Class ProdukBeranda
+ * @note Resource untuk mengelola data m_produk_beranda
+ * @dataDescription m_produk_beranda
+ * @package App\Controllers
+ */
+class Tokopedia extends ResourceController
+{
+    const LIFETIME_MINUTE = 60 * 24; // 60 Menit
+    const LIFETIME_ACCESS_TOKEN = (60 * self::LIFETIME_MINUTE); // 1 Hari
+    const LIFETIME_REFRESH_TOKEN = (60 * 60 * 24 * self::LIFETIME_MINUTE); // 1 Tahun
+
+    protected $tokopediaApi;
+    protected $validationMessage = [];
+    protected $user;
+
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    {
+        parent::initController($request, $response, $logger);
+        $this->user = count($request->fetchGlobal('decoded')) > 0 ? $request->fetchGlobal('decoded') : ['role' => '', 'filterIdentifier' => ''];
+        $this->tokpedApi = new TokopediaApi($this->user['sid'] ?? '');
+		date_default_timezone_set('Asia/Kuala_Lumpur');
+    }
+
+    public function sendOTP()
+    {
+        $response = $this->tokpedApi->sendOTP();
+
+        return $this->response($response);
+    }
+
+    public function auth()
+    {
+        if ($this->validate([
+            'otp' => 'required|numeric|min_length[6]|max_length[6]',
+        ], $this->validationMessage)) {
+            
+            try {
+                // Example Data
+                $response = json_decode('{
+                    "login_token": {
+                        "access_token": "_qFVPuOGSwmbWMNtEMNuAQ",
+                        "refresh_token": "GIb3AMKKR3WODG0a0nQNyA",
+                        "token_type": "Bearer",
+                        "sid": "3h-2S5hWjPoAGUBdhe6H2rL_wjamS6KnMYXusPcHOD9vktg3eoaF0xIxQbkDTkVC0Mg487zfp_Mfqxlk8pBbiDdFBhl9RSeHFVPc0-5y0kK6am1GvKMZcBh02YIEuWQd",
+                        "acc_sid": "",
+                        "errors": [],
+                        "popup_error": {
+                            "header": "",
+                            "body": "",
+                            "action": "",
+                            "__typename": "PopupTokenError"
+                        },
+                        "sq_check": false,
+                        "cotp_url": "",
+                        "uid": 208950763,
+                        "action": 0,
+                        "event_code": "SuccessLoginPhone",
+                        "expires_in": 5184000,
+                        "__typename": "TokenInfoV2"
+                    }
+                }', true);
+
+                $otp = $this->request->getPost('otp');
+                $response = $this->tokpedApi->validasiOTP($otp);
+                $response = $this->tokpedApi->loginMutationV2($response['OTPValidate']['validateToken']);
+
+                if(!empty($response['login_token']['access_token'])){
+                    $apiKeys = $this->request->getHeaderLine("X-ApiKey");
+                    $keyAccess = config("App")->JWTKeyAccess;
+                    $keyRefresh = config("App")->JWTKeyRefresh;
+        
+                    $accessPayload = [
+                        "iss" => base_url(),
+                        "aud" => base_url(),
+                        "iat" => time(),
+                        "nbf" => time(),
+                        "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
+                        "user" => $response['login_token'],
+                        "key" => $apiKeys
+                    ];
+                    $refreshPayload = [
+                        "iss" => base_url(),
+                        "aud" => base_url(),
+                        "iat" => time(),
+                        "nbf" => time(),
+                        "exp" => time() + $response['login_token']['expires_in'], // Expires Tokopedia Nakama
+                        "user" => $response['login_token'],
+                        "key" => $apiKeys
+                    ];
+    
+                    $accessToken = JWT::encode($accessPayload, $keyAccess);
+                    $refreshToken = JWT::encode($refreshPayload, $keyRefresh);
+    
+                    return $this->response(['accessToken' => $accessToken, 'refreshToken' => $refreshToken], 200);
+                }
+
+                return $this->response($response, 403, 'Login gagal');
+            } catch (\Exception $ex) {
+                return $this->response(null, 500, $ex->getMessage());
+            }
+        } else {
+            return $this->response(null, 400, $this->validator->getErrors());
+        }
+    }
+
+    public function refresh()
+    {
+        if ($this->validate(['tokenRefresh' => 'required'])) {
+            $apiKeys = $this->request->getHeaderLine("X-ApiKey");
+            $tokenRefresh = $this->request->getVar("tokenRefresh");
+
+            try {
+                $keyRefresh = config("App")->JWTKeyRefresh;
+                $decoded = JWT::decode($tokenRefresh, $keyRefresh, ['HS256']);
+                $keyAccess = config("App")->JWTKeyAccess;
+                $accessPayload = [
+                    "iss" => base_url(),
+                    "aud" => base_url(),
+                    "iat" => time(),
+                    "nbf" => time(),
+                    "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
+                    "user" => (array) $decoded->user,
+                    "key" => $apiKeys
+                ];
+                $accessToken = JWT::encode($accessPayload, $keyAccess);
+                return $this->response(['accessToken' => $accessToken]);
+            } catch (BeforeValidException $ex) {
+                return $this->response(null, 400, 'Refresh Token belum valid');
+            } catch (ExpiredException $ex) {
+                return $this->response(null, 400, 'Refresh Token expired');
+            } catch (SignatureInvalidException $ex) {
+                return $this->response(null, 400, 'Refresh Token Signature Tidak valid');
+            } catch (\Exception $ex) {
+                return $this->response(null, 400, $ex->getMessage());
+            }
+        } else {
+            return $this->response(null, 400, $this->validator->getErrors());
+        }
+    }
+
+    public function isAuth()
+    {
+        $response = $this->tokpedApi->isAuth();
+
+        return $this->response($response);
+    }
+
+    public function cekVaNumber()
+    {
+        $response = $this->tokpedApi->checkVaNumberMitraBRI();
+
+        return $this->response($response);
+    }
+
+    public function cekSaldoMitra()
+    {
+        $response = $this->tokpedApi->checkSaldoMitraBRI();
+
+        return $this->response($response);
+    }
+
+    public function cekAkun()
+    {
+        $response = $this->tokpedApi->checkSaldoMitraBRI();
+
+        return $this->response($response);
+    }
+
+    protected function response($data = null, int $code = 200, $message = null)
+    {
+        return parent::respond([
+            'code' => $code,
+            'message' => $message,
+            'data' => $data
+        ]);
+    }
+}
