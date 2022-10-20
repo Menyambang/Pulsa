@@ -3,6 +3,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\IRSAviana;
 use Config\Services;
 use Psr\Log\LoggerInterface;
 use CodeIgniter\HTTP\RequestInterface;
@@ -33,7 +34,9 @@ class MyResourceController extends ResourceController
         parent::initController($request, $response, $logger);
         helper("myfile");
         helper("text");
+
         $this->user = count($request->fetchGlobal('decoded')) > 0 ? $request->fetchGlobal('decoded') : ['role' => '', 'filterIdentifier' => ''];
+        $this->irs = new IRSAviana($this->user);
 		date_default_timezone_set('Asia/Kuala_Lumpur');
     }
 

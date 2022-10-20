@@ -12,7 +12,7 @@ use CodeIgniter\RESTful\ResourceController;
  * @dataDescription m_produk_beranda
  * @package App\Controllers
  */
-class MyResourceDigipos extends ResourceController
+class MyResourceIRSAviana extends ResourceController
 {
     const LIFETIME_MINUTE = 60 * 24; // 60 Menit
     const LIFETIME_ACCESS_TOKEN = (60 * self::LIFETIME_MINUTE); // 1 Hari
