@@ -369,4 +369,17 @@ class MyResourceController extends ResourceController
             'data' => $data
         ]);
     }
+
+    protected function convertResponse($data)
+    {
+        $isSuccess = isset($data['success']) && $data['success'];
+
+        unset($data['success']);
+        
+        return parent::respond([
+            'code' => $isSuccess ? 200 : 400,
+            'message' => $data['msg'] ?? '-',
+            'data' => $data['data'] ?? $data,
+        ]);
+    }
 }

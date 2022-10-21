@@ -67,8 +67,34 @@ $route->group("irs", function ($route) {
         $route->group("auth", ['filter' => 'apiFilter'], function ($route) {
             $route->post("/", 'Api\IRSAvianaV8\Auth::auth');
         });
+        $route->group("global", ['filter' => 'apiFilter'], function ($route) {
+            $route->get("(:segment)", 'Api\IRSAvianaV8\Global::get/$1');
+            $route->post("(:segment)", 'Api\IRSAvianaV8\Global::post/$1');
+        });
         $route->group("user", ['filter' => 'apiFilter'], function ($route) {
-            $route->get("/", 'Api\IRSAvianaV8\User::getProfile');
+            $route->get("profile", 'Api\IRSAvianaV8\User::getProfile');
+            $route->post("cekPin", 'Api\IRSAvianaV8\User::cekPin');
+            $route->post("changePin", 'Api\IRSAvianaV8\User::changePin');
+        });
+        $route->group("lokasi", ['filter' => 'apiFilter'], function ($route) {
+            $route->get("provinsi", 'Api\IRSAvianaV8\Lokasi::getProvinsi');
+            $route->get("cities/(:segment)", 'Api\IRSAvianaV8\Lokasi::getCities/$1');
+            $route->get("districts/(:segment)", 'Api\IRSAvianaV8\Lokasi::getDistrict/$1');
+        });
+        $route->group("product", ['filter' => 'apiFilter'], function ($route) {
+            $route->get("games", 'Api\IRSAvianaV8\Product::getGames');
+            $route->post("byCategory", 'Api\IRSAvianaV8\Product::getByCategory');
+            $route->get("pdam", 'Api\IRSAvianaV8\Product::getPDAM');
+            $route->get("fisik", 'Api\IRSAvianaV8\Product::getFisik');
+            $route->post("operator", 'Api\IRSAvianaV8\Product::getOperator');
+            $route->post("operatorTujuan", 'Api\IRSAvianaV8\Product::getOperatorTujuan');
+            $route->get("priceList", 'Api\IRSAvianaV8\Product::getPriceList');
+            $route->post("byDenom", 'Api\IRSAvianaV8\Product::getByDenom');
+        });
+        $route->group("transaksi", ['filter' => 'apiFilter'], function ($route) {
+            $route->post("pay", 'Api\IRSAvianaV8\Transaksi::pay');
+            $route->post("reedem", 'Api\IRSAvianaV8\Transaksi::reedem');
+            $route->post("cetakStruk", 'Api\IRSAvianaV8\Transaksi::cetakStruk');
         });
     });
 });

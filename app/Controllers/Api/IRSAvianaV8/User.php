@@ -8,7 +8,21 @@ class User extends MyResourceController
     {
         $response = $this->irs->getProfile();
 
-        return $this->response($response, 200);
+        return $this->convertResponse($response, 200);
+    }
+
+    public function cekPin()
+    {
+        $response = $this->irs->cekPin($this->request->getVar());
+
+        return $this->convertResponse($response, 200);
+    }
+
+    public function changePin()
+    {
+        $response = $this->irs->changePin($this->request->getVar());
+
+        return $this->convertResponse($response, 200);
     }
 
 }

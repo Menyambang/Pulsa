@@ -14,6 +14,7 @@ class IRSAviana
     private $secretKey = '988FD5935BB9FBC3530314B2619BF603';
     private $noHp = '';
     private $body = [];
+    private $apiVersion = 'v8';
 
     /**
      * Expired 1 Bulan
@@ -119,7 +120,22 @@ class IRSAviana
         }
     }
 
+    private $routeMap = [
+        'profile' => '/users/profile',
+        'checkpin' => '/users/checkpin',
+        'changepin' => '/users/changepin',
+    ];
 
+    public function getByApiVersion($route, $formData = [])
+    {
+        $route = $this->routeMap[$route] ?? '';
+      
+        $response = $this
+            ->setBody($formData)
+            ->execute('POST', "/apps/$this->apiVersion/$route");
+
+        return $response;
+    }
 
     // ========================== V8 =============================== //
 
@@ -148,13 +164,112 @@ class IRSAviana
 
     public function getProfile()
     {
-        $response = $this
-            ->execute('POST', "/apps/v8/users/profile");
+        return $this->execute('POST', "/apps/v8/users/profile");
+    }
 
-        return $response;
+    public function cekPin($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/users/checkpin");
+    }
+
+    public function changePin($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/users/changepin");
     }
 
     // ========================== END AKUN =============================== //
+
+    // ========================== LOKASI =============================== //
+
+    public function getProvinsi()
+    {
+        return $this->execute('POST', "/apps/v8/locations/provinces");
+    }
+
+    public function getCities($provinsiId)
+    {
+        return $this->setBody([
+            'province_id' => $provinsiId
+        ])->execute('POST', "/apps/v8/locations/cities");
+    }
+
+    public function getDistrict($citiesId)
+    {
+        return $this->setBody([
+            'city_id' => $citiesId
+        ])->execute('POST', "/apps/v8/locations/districts");
+    }
+
+    // ========================== END LOKASI =============================== //
+
+    // ========================== PRODUCT =============================== //
+
+    public function getGames()
+    {
+        return $this->execute('POST', "/apps/v8/products/games");
+    }
+
+    public function getByCategory($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/products/bycategory");
+    }
+
+    public function getPDAM()
+    {
+        return $this->execute('POST', "/apps/v8/products/pdam");
+    }
+
+    public function getFisik()
+    {
+        return $this->execute('POST', "/apps/v8/products/fisik");
+    }
+
+    public function getOperator($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/products/operators");
+    }
+
+    public function getOperatorTujuan($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/products/operators/bytujuan");
+    }
+
+    public function getPriceList()
+    {
+        return $this->execute('GET', "/apps/v8/products/pricelist/operators?uuid={$this->noHp}");
+    }
+
+    public function getByPrefix($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/products/byprefik");
+    }
+
+    public function getByDenom($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/products/bydenom");
+    }
+
+    // ========================== END PRODUCT =============================== //
+
+    
+    // ========================== TRANSAKSI =============================== //
+
+    public function pay($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/transactions/pay");
+    }
+
+    public function reedem($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/transactions/redeem");
+    }
+
+    public function cetakStruk($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/transactions/cetakstruk");
+    }
+
+    // ========================== END TRANSAKSI =============================== //
 
     // ========================== END V8 =============================== //
 }
