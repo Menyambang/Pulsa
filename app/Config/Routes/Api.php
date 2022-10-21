@@ -76,7 +76,7 @@ $route->group("irs", function ($route) {
             $route->post("cekPin", 'Api\IRSAvianaV8\User::cekPin');
             $route->post("changePin", 'Api\IRSAvianaV8\User::changePin');
         });
-        $route->group("lokasi", ['filter' => 'apiFilter'], function ($route) {
+        $route->group("lokasi", function ($route) {
             $route->get("provinsi", 'Api\IRSAvianaV8\Lokasi::getProvinsi');
             $route->get("cities/(:segment)", 'Api\IRSAvianaV8\Lokasi::getCities/$1');
             $route->get("districts/(:segment)", 'Api\IRSAvianaV8\Lokasi::getDistrict/$1');
@@ -95,6 +95,14 @@ $route->group("irs", function ($route) {
             $route->post("pay", 'Api\IRSAvianaV8\Transaksi::pay');
             $route->post("reedem", 'Api\IRSAvianaV8\Transaksi::reedem');
             $route->post("cetakStruk", 'Api\IRSAvianaV8\Transaksi::cetakStruk');
+        });
+        $route->group("histori", ['filter' => 'apiFilter'], function ($route) {
+            $route->post("deposit", 'Api\IRSAvianaV8\Histori::deposit');
+            $route->post("mutasi", 'Api\IRSAvianaV8\Histori::mutasi');
+            $route->post("transaksi", 'Api\IRSAvianaV8\Histori::transaksi');
+            $route->post("transaksifisik", 'Api\IRSAvianaV8\Histori::transaksifisik');
+            $route->post("rewards", 'Api\IRSAvianaV8\Histori::rewards');
+            $route->post("transfer", 'Api\IRSAvianaV8\Histori::transfer');
         });
     });
 });

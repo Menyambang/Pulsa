@@ -271,5 +271,39 @@ class IRSAviana
 
     // ========================== END TRANSAKSI =============================== //
 
+    // ========================== HISTORI =============================== //
+
+    public function deposit($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/histories/deposit");
+    }
+
+    public function mutasi($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/histories/mutasi");
+    }
+
+    public function transaksi($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/histories/transaksi");
+    }
+
+    public function transaksifisik($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/histories/transaksifisik");
+    }
+
+    public function rewards($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/histories/rewards");
+    }
+
+    public function transfer($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/histories/transfer");
+    }
+
+    // ========================== END HISTORI =============================== //
+
     // ========================== END V8 =============================== //
 }
