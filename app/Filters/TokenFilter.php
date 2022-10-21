@@ -28,6 +28,7 @@ class TokenFilter implements FilterInterface
                 try {
                     $decoded = JWT::decode($tokenHeader->getValue(), $keyAccess, ['HS256']);
                     $request->setGlobal("decoded", array_merge((array)$decoded->user, ['userJson' => json_encode($decoded->user)]));
+                    $request->setGlobal("irs", array_merge((array)$decoded->irs, ['irsJson' => json_encode($decoded->irs)]));
                     try {
                         $request->setGlobal("version", [
                             'app_version' => $appVersion->getValue()

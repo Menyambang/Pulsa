@@ -64,8 +64,11 @@ $route->group("tokopedia", function ($route) {
 
 $route->group("irs", function ($route) {
     $route->group("v8", function ($route) {
-        $route->group("auth", function ($route) {
+        $route->group("auth", ['filter' => 'apiFilter'], function ($route) {
             $route->post("/", 'Api\IRSAvianaV8\Auth::auth');
+        });
+        $route->group("user", ['filter' => 'apiFilter'], function ($route) {
+            $route->get("/", 'Api\IRSAvianaV8\User::getProfile');
         });
     });
 });

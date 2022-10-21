@@ -1,28 +1,14 @@
-<?php namespace App\Controllers\Api\Digipos;
+<?php namespace App\Controllers\Api\IRSAvianaV8;
 
-use App\Controllers\Api\Digipos\MyResourceDigipos;
+use App\Controllers\MyResourceController;
 
-class User extends MyResourceDigipos
+class User extends MyResourceController
 {
-    public function getKategori()
-    {
-        $response = $this->digiposApi->getKategori();
-
-        return $this->convertResponse($response);
-    }
-
     public function getProfile()
     {
-        $response = $this->digiposApi->getProfile();
+        $response = $this->irs->getProfile();
 
-        return $this->convertResponse($response);
-    }
-
-    public function cekSaldo($type = 'linkaja')
-    {
-        $response = $this->digiposApi->cekSaldo($type);
-
-        return $this->convertResponse($response);
+        return $this->response($response, 200);
     }
 
 }

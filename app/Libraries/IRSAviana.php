@@ -12,6 +12,8 @@ class IRSAviana
     private $versionApk = '5.13.1.235';
     private $baseUrl = 'http://128.199.225.33:8089';
     private $secretKey = '988FD5935BB9FBC3530314B2619BF603';
+    private $noHp = '';
+    private $body = [];
 
     /**
      * Expired 1 Bulan
@@ -20,28 +22,31 @@ class IRSAviana
      */
     public function __construct($user)
     {
-        $uuid = 'Ye93XnPQEIfFInSvW92TZM9H2M57';
+        $this->noHp = md5($user['noHp'] ?? $this->secretKey);
 
         $this->options = [];
         $options['http_errors'] = false;
         $options['baseURI'] = $this->baseUrl;
         $options['headers'] = [
-            'irsauth' => $this->generateIRSAuth($uuid), // V8
-            'x-auth-irs' => $this->generateXIRSAuth($uuid), // V9
-            // 'Authorization' => 'Bearer ',
+            'irsauth' => $this->generateIRSAuth($this->noHp), // V8
+            'x-auth-irs' => $this->generateXIRSAuth($this->noHp), // V9
             'Accept' => '*/*',
-            'Host' => '128.199.225.33:8089',
             'Accept-Encoding' => 'gzip, deflate, br',
             'Connection' => 'keep-alive',
             'Content-Type' => 'application/x-www-form-urlencoded',
             // 'Content-Length' => '52'
         ];
 
-        // echo '<pre>';
-        // print_r($options);
-        // echo '</pre>';exit;
+        if(isset($user['token'])){
+            $options['headers']['Authorization'] = "Bearer $user[token]";
+        }
 
         $this->curl = \Config\Services::curlrequest($options, null, null, false);
+
+        $this->body = [
+            'uuid' => $this->noHp,
+        ];
+        $this->curl->setForm($this->body);
     }
 
     private function generateIRSAuth($uuid){
@@ -78,12 +83,8 @@ class IRSAviana
      */
     private function setBody($body)
     {
-        $uuid = 'Ye93XnPQEIfFInSvW92TZM9H2M57';
-        $body = (array_merge([
-            'uuid' => $uuid,
-        ], $body));
-        $this->body = $body;
-        $this->curl->setForm($body);
+        $this->body = array_merge($this->body,$body);
+        $this->curl->setForm($this->body);
         return $this;
     }
 
@@ -126,16 +127,34 @@ class IRSAviana
 
     public function auth($phoneNumber)
     {
+        $this->noHp = md5($phoneNumber);
+        
+        $options['headers'] = [
+            'irsauth' => $this->generateIRSAuth($this->noHp), // V8
+            'x-auth-irs' => $this->generateXIRSAuth($this->noHp), // V9
+        ];
+
         $response = $this
             ->setBody([
                 "phone" => $phoneNumber,
+                'uuid' => $this->noHp,
             ])
-            ->execute('POST', "/apps/v8/users/accountkit");
+            ->execute('POST', "/apps/v8/users/accountkit", $options);
 
         return $response;
     }
 
-    // ========================== END AUTH =============================== //
+    // ========================== AKUN =============================== //
+
+    public function getProfile()
+    {
+        $response = $this
+            ->execute('POST', "/apps/v8/users/profile");
+
+        return $response;
+    }
+
+    // ========================== END AKUN =============================== //
 
     // ========================== END V8 =============================== //
 }

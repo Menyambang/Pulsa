@@ -56,32 +56,49 @@ class Auth extends MyResourceController
                 ];
             }
 
-            $accessPayload = [
-                "iss" => base_url(),
-                "aud" => base_url(),
-                "iat" => time(),
-                "nbf" => time(),
-                "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
-                "user" => $user->toArray(),
-                "key" => $apiKeys
-            ];
-            $refreshPayload = [
-                "iss" => base_url(),
-                "aud" => base_url(),
-                "iat" => time(),
-                "nbf" => time(),
-                "exp" => time() + self::LIFETIME_REFRESH_TOKEN,
-                "user" => $user->toArray(),
-                "key" => $apiKeys
-            ];
+            $irsActive = $this->irs->auth($user->noHp);
 
-            $accessToken = JWT::encode($accessPayload, $keyAccess);
-            $refreshToken = JWT::encode($refreshPayload, $keyRefresh);
-            return [
-                'code' => 200,
-                'message' => null,
-                'data' => ['accessToken' => $accessToken, 'refreshToken' => $refreshToken],
-            ];
+            if (isset($irsActive['status']) && $irsActive['status'] == 1) {
+                $user->irs = $irsActive;
+
+                // echo '<pre>';
+                // print_r($user);
+                // echo '</pre>';exit;
+                $accessPayload = [
+                    "iss" => base_url(),
+                    "aud" => base_url(),
+                    "iat" => time(),
+                    "nbf" => time(),
+                    "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
+                    "user" => $user,
+                    "irs" => $irsActive,
+                    "key" => $apiKeys,
+                ];
+                $refreshPayload = [
+                    "iss" => base_url(),
+                    "aud" => base_url(),
+                    "iat" => time(),
+                    "nbf" => time(),
+                    "exp" => time() + self::LIFETIME_REFRESH_TOKEN,
+                    "user" => $user,
+                    "irs" => $irsActive,
+                    "key" => $apiKeys,
+                ];
+
+                $accessToken = JWT::encode($accessPayload, $keyAccess);
+                $refreshToken = JWT::encode($refreshPayload, $keyRefresh);
+                return [
+                    'code' => 200,
+                    'message' => null,
+                    'data' => ['accessToken' => $accessToken, 'refreshToken' => $refreshToken],
+                ];
+            } else {
+                return [
+                    'code' => 400,
+                    'message' => $irsActive['msg'],
+                    'data' => null,
+                ];
+            }
         } else {
             return [
                 'code' => 400,
@@ -121,29 +138,37 @@ class Auth extends MyResourceController
                     return $this->response(null, self::CODE_UNACTIVATED, 'Akun belum di aktivasi');
                 }
 
-                $accessPayload = [
-                    "iss" => base_url(),
-                    "aud" => base_url(),
-                    "iat" => time(),
-                    "nbf" => time(),
-                    "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
-                    "user" => $user->toArray(),
-                    "key" => $apiKeys
-                ];
-                $refreshPayload = [
-                    "iss" => base_url(),
-                    "aud" => base_url(),
-                    "iat" => time(),
-                    "nbf" => time(),
-                    "exp" => time() + self::LIFETIME_REFRESH_TOKEN,
-                    "user" => $user->toArray(),
-                    "key" => $apiKeys
-                ];
+                $irsActive = $this->irs->auth($user->noHp);
 
-                $accessToken = JWT::encode($accessPayload, $keyAccess);
-                $refreshToken = JWT::encode($refreshPayload, $keyRefresh);
+                if (isset($irsActive['status']) && $irsActive['status'] == 1) {
+                    $user->irs = $irsActive;
 
-                return $this->response(['accessToken' => $accessToken, 'refreshToken' => $refreshToken], 200);
+                    $accessPayload = [
+                        "iss" => base_url(),
+                        "aud" => base_url(),
+                        "iat" => time(),
+                        "nbf" => time(),
+                        "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
+                        "irs" => $irsActive,
+                        "user" => $user->toArray(),
+                    ];
+                    $refreshPayload = [
+                        "iss" => base_url(),
+                        "aud" => base_url(),
+                        "iat" => time(),
+                        "nbf" => time(),
+                        "exp" => time() + self::LIFETIME_REFRESH_TOKEN,
+                        "irs" => $irsActive,
+                        "user" => $user->toArray(),
+                    ];
+
+                    $accessToken = JWT::encode($accessPayload, $keyAccess);
+                    $refreshToken = JWT::encode($refreshPayload, $keyRefresh);
+
+                    return $this->response(['accessToken' => $accessToken, 'refreshToken' => $refreshToken], 200);
+                } else {
+                    return $this->response(null, 400, $irsActive['msg']);
+                }
             } else {
                 return $this->response(null, 400, 'User tidak ditemukan');
             }
@@ -193,17 +218,26 @@ class Auth extends MyResourceController
                 $decoded = JWT::decode($tokenRefresh, $keyRefresh, ['HS256']);
                 $apiKeys = $this->request->getHeader("X-ApiKey");
                 $keyAccess = config("App")->JWTKeyAccess;
-                $accessPayload = [
-                    "iss" => base_url(),
-                    "aud" => base_url(),
-                    "iat" => time(),
-                    "nbf" => time(),
-                    "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
-                    "user" => (array) $decoded->user,
-                    "key" => $apiKeys->getValue()
-                ];
-                $accessToken = JWT::encode($accessPayload, $keyAccess);
-                return $this->response(['accessToken' => $accessToken]);
+
+                $irsActive = $this->irs->auth($decoded->user->noHp);
+
+                if (isset($irsActive['status']) && $irsActive['status'] == 1) {
+                    $decoded->user = $irsActive;
+                    $accessPayload = [
+                        "iss" => base_url(),
+                        "aud" => base_url(),
+                        "iat" => time(),
+                        "nbf" => time(),
+                        "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
+                        "user" => (array) $decoded->user,
+                        "irs" => $irsActive,
+                        "key" => $apiKeys->getValue()
+                    ];
+                    $accessToken = JWT::encode($accessPayload, $keyAccess);
+                    return $this->response(['accessToken' => $accessToken]);
+                } else {
+                    return $this->response(null, 400, $irsActive['msg']);
+                }
             } catch (BeforeValidException $ex) {
                 return $this->response(null, 400, 'Refresh Token belum valid');
             } catch (ExpiredException $ex) {
