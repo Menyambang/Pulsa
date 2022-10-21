@@ -104,6 +104,11 @@ $route->group("irs", function ($route) {
             $route->post("rewards", 'Api\IRSAvianaV8\Histori::rewards');
             $route->post("transfer", 'Api\IRSAvianaV8\Histori::transfer');
         });
+        $route->group("ticket", ['filter' => 'apiFilter'], function ($route) {
+            $route->post("deposit", 'Api\IRSAvianaV8\Ticket::deposit');
+            $route->post("transfer", 'Api\IRSAvianaV8\Ticket::transfer');
+            $route->post("rekening", 'Api\IRSAvianaV8\Ticket::rekening');
+        });
     });
 });
 

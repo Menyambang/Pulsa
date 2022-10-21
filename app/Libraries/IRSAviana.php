@@ -305,5 +305,24 @@ class IRSAviana
 
     // ========================== END HISTORI =============================== //
 
+    // ========================== TICKET =============================== //
+
+    public function ticket_deposit($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/tickets/deposit");
+    }
+
+    public function ticket_transfer($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/tickets/transfer");
+    }
+
+    public function ticket_rekening($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/tickets/rekening");
+    }
+
+    // ========================== END TICKET =============================== //
+
     // ========================== END V8 =============================== //
 }
