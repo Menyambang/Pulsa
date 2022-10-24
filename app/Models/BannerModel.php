@@ -12,7 +12,7 @@ class BannerModel extends MyModel
     protected $createdField = "bnrCreatedAt";
     protected $updatedField = "bnrUpdatedAt";
     protected $returnType = "App\Entities\Banner";
-    protected $allowedFields = ["bnrDeskripsi","bnrGambar","bnrUrl", "bnrJenis", "bnrKategoriId", "bnrProdukId", "bnrType", "bnrDeletedAt"];
+    protected $allowedFields = ["bnrDeskripsi","bnrGambar","bnrUrl","bnrJenis","bnrProdukId","bnrType","bnrDeletedAt"];
 
     public function getReturnType()
     {
@@ -26,12 +26,12 @@ class BannerModel extends MyModel
     protected function relationships()
     {
         return [
-            'kategori' => $this->belongsTo('m_kategori', Kategori::class, 'bnrKategoriId = ktgId', 'kategori2'),
-            'produk' => $this->belongsTo('m_produk', Produk::class, 'bnrProdukId = produkId', 'produk', 'produkId', 'LEFT', function($relation){
-                return $relation->hasMany('t_produk_gambar', ProdukGambar::class, 'prdgbrProdukId = produkId', 'gambar', 'prdgbrProdukId');
-            }, function ($relation) {
-                return $relation->belongsTo('m_kategori ktg', Kategori::class, 'kategori.ktgId = produkKategoriId', 'kategori', 'ktgId');
-            }),
+            // 'kategori' => $this->belongsTo('m_kategori', Kategori::class, 'bnrKategoriId = ktgId', 'kategori2'),
+            // 'produk' => $this->belongsTo('m_produk', Produk::class, 'bnrProdukId = produkId', 'produk', 'produkId', 'LEFT', function($relation){
+            //     return $relation->hasMany('t_produk_gambar', ProdukGambar::class, 'prdgbrProdukId = produkId', 'gambar', 'prdgbrProdukId');
+            // }, function ($relation) {
+            //     return $relation->belongsTo('m_kategori ktg', Kategori::class, 'kategori.ktgId = produkKategoriId', 'kategori', 'ktgId');
+            // }),
         ];
     }
 

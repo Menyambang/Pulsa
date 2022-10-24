@@ -259,7 +259,8 @@ class MyModel extends Model
         $callJoin = [];
         $callEntity = [];
         $callSeparator = '';
-        $asObject = $asObject ? '' : 'JSON_ARRAYAGG';
+        $jsonObject = "JSON_OBJECT(" . $this->entityToMysqlObject($entity) . $callSeparator . implode(', ', $callEntity) . ")";
+        $asObject = $asObject ? $jsonObject : "CONCAT('[',GROUP_CONCAT($jsonObject),']') AS $alias";
 
         foreach ($callable as  $callbacks) {
             if (is_callable($callbacks))
@@ -283,7 +284,7 @@ class MyModel extends Model
 
         // Insided Query Table
         $query = "SELECT *,
-            $asObject(JSON_OBJECT(" . $this->entityToMysqlObject($entity) . $callSeparator . implode(', ', $callEntity) . ")) AS ".$alias."
+            $asObject
             FROM ".$table." 
             ".implode(' ', $callJoin)." 
             ".$hasGroup;
