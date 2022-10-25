@@ -115,21 +115,6 @@
                         <input type="text" name="jalan" id="jalan" class="form-control readonly-background" placeholder="Jalan">
                         <p class="text-danger" id="er_jalan"></p>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="">Provinsi</label>
-                        <?= form_dropdown('provinsiId', $provinsi, '', ['class' => 'form-control provinsiId select2', 'id' => 'provinsiId']); ?>
-                        <p class="text-danger" id="er_provinsiId"></p>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="">Kabupaten / Kota <span id="kotaIdLoading"></span></label>
-                        <?= form_dropdown('kotaId', [], '', ['class' => 'form-control kotaId select2', 'id' => 'kotaId']); ?>
-                        <p class="text-danger" id="er_kotaId"></p>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="">Kecamatan <span id="kecamatanIdLoading"></span></label>
-                        <?= form_dropdown('kecamatanId', [], '', ['class' => 'form-control kecamatanId select2', 'id' => 'kecamatanId']); ?>
-                        <p class="text-danger" id="er_kecamatanId"></p>
-                    </div>
 
                 </div>
                 <div class="modal-footer">

@@ -2,7 +2,6 @@
 
 namespace App\Validation;
 
-use App\Models\ProdukModel;
 use App\Models\UserModel;
 use Exception;
 
@@ -50,57 +49,6 @@ class CustomValidation
         return true;
     }
 
-    public function cek_kode_sudah_digunakan($string, string $fields, array $data, string &$error = null)
-    {
-        $idSekarang = $string;
-        $idSebelumnya = $data[$fields];
-        
-        if($idSebelumnya != $idSekarang){
-            $productModel = new ProdukModel();
-            $findData = $productModel->find($idSekarang);
-
-            if(!empty($findData)){
-                $error = "Kode produk $idSekarang sudah digunakan.";
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public function cek_stok_variasi($string, string $fields, array $data, string &$error = null)
-    {
-        $jlhStokVariasi = $string;
-        $jlhStokDariProduk = $data[$fields];
-        $produkId = $data['produkId'];
-        $totalStok = $jlhStokDariProduk * $jlhStokVariasi;
-        
-        $productModel = new ProdukModel();
-        $findData = $productModel->find($produkId);
-
-        if($totalStok > $findData->stok){
-            $error = "Stok variasi tidak boleh lebih dari stok produk";
-            return false;
-        }
-
-        return true;
-    }
-
-    public function cek_stok_produk($string, string $fields, array $data, string &$error = null)
-    {
-        $jlhStokProduk = $string;
-        $produkId = $data['produkId'];
-        
-        $productModel = new ProdukModel();
-        $findData = $productModel->find($produkId);
-
-        if($jlhStokProduk > $findData->stok){
-            $error = "Tidak boleh melebihi dari stok produk";
-            return false;
-        }
-
-        return true;
-    }
 
     public function cek_email_terdaftar($string,  string &$error = null)
     {

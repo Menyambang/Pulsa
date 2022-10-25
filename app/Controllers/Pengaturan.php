@@ -18,16 +18,16 @@ class Pengaturan extends BaseController
     protected $format    = 'json';
 
     protected $rules = [
-        'h2h_endpoint' => ['label' => 'End Point', 'rules' => 'required'],
-        'h2h_id' => ['label' => 'ID', 'rules' => 'required'],
-        // 'h2h_idtrx' => ['label' => 'ID Trx', 'rules' => 'required'],
-        // 'h2h_counter' => ['label' => 'Counter', 'rules' => 'required'],
-        'h2h_user' => ['label' => 'User', 'rules' => 'required'],
-        'h2h_pass' => ['label' => 'Password', 'rules' => 'required'],
+        'app_name' => ['label' => 'Nama Aplikasi', 'rules' => 'required'],
+        'server_id' => ['label' => 'Server ID', 'rules' => 'required'],
+        'tagline' => ['label' => 'Tagline', 'rules' => 'required'],
+        'api_key' => ['label' => 'API KEY IRS', 'rules' => 'required'],
+        'api_url' => ['label' => 'API URL IRS', 'rules' => 'required'],
     ];
 
     protected $rulesAplikasiMobile = [
-        'splash_banner' => ['label' => 'Splash Banner', 'rules' => 'required|is_image[splash_banner]|max_size[splash_banner,5024]|mime_in[splash_banner, image/jpg,image/jpeg,image/png,image/x-png]'],
+        'splash_banner' => ['label' => 'Splash Banner', 'rules' => 'is_image[splash_banner]|max_size[splash_banner,5024]|mime_in[splash_banner, image/jpg,image/jpeg,image/png,image/x-png]'],
+        'app_color' => ['label' => 'Warna Aplikasi', 'rules' => 'required'],
     ];
 
     public function index()

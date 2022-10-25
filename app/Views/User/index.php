@@ -318,7 +318,7 @@
                             show: true
                         });
 
-                        return `${btnKeranjang} ${btnEdit}`;
+                        return ` ${btnEdit}`;
                     }
                 }
             ]

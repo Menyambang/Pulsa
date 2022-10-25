@@ -37,7 +37,7 @@ class BannerModel extends MyModel
 
     public function selectJenis(){
         $select= [];
-        foreach (['Kategori', 'Produk', 'Artikel'] as $key => $value) {
+        foreach ([/* 'Kategori', 'Produk', */ 'Artikel'] as $key => $value) {
             $select[$value] = $value;
         }
 

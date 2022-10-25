@@ -11,7 +11,7 @@ use App\Models\Eloquent\UserM;
 
 class Welcome extends BaseController
 {
-    protected $modelName = 'App\Models\ProdukModel';
+    // protected $modelName = 'App\Models\ProdukModel';
 
     public function index()
     {   

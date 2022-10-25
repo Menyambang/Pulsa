@@ -27,26 +27,17 @@ class User extends BaseController
         'nama' => ['label' => 'nama', 'rules' => 'required'],
         'noHp' => ['label' => 'No Hp', 'rules' => 'required|numeric'],
         'noWa' => ['label' => 'No Whatsapp', 'rules' => 'required|numeric'],
-        'kotaId' => ['label' => 'Id Kota / Kabupaten', 'rules' => 'required'],
-        'provinsiId' => ['label' => 'Id Provinsi', 'rules' => 'required'],
-        'kecamatanId' => ['label' => 'Id Kecamatan', 'rules' => 'required'],
+        // 'kotaId' => ['label' => 'Id Kota / Kabupaten', 'rules' => 'required'],
+        // 'provinsiId' => ['label' => 'Id Provinsi', 'rules' => 'required'],
+        // 'kecamatanId' => ['label' => 'Id Kecamatan', 'rules' => 'required'],
         'alamatNama' => ['label' => 'Nama Alamat', 'rules' => 'required'],
         'jalan' => ['label' => 'Jalan', 'rules' => 'required'],
     ];
 
-    function __construct()
-    {
-        $this->rajaOngkir = new RajaOngkirShipping();
-    }
-    
     public function index()
     {
-        $data = [
-            'provinsi' => $this->_selectProvinsi(),
-        ];
-
         return $this->template->setActiveUrl('User')
-            ->view("User/index", $data);
+            ->view("User/index");
     }
 
     public function simpan($primary = '')
@@ -75,9 +66,9 @@ class User extends BaseController
                     $userAlamat->where('usralUsrEmail', $this->request->getVar($primary));
                     $userAlamat->where('usralIsFirst', 1);
                     $userAlamat->update(null, [
-                        'usralProvinsiId' => $this->request->getVar('provinsiId'),
-                        'usralKotaId' => $this->request->getVar('kotaId'),
-                        'usralKecamatanId' => $this->request->getVar('kecamatanId'),
+                        // 'usralProvinsiId' => $this->request->getVar('provinsiId'),
+                        // 'usralKotaId' => $this->request->getVar('kotaId'),
+                        // 'usralKecamatanId' => $this->request->getVar('kecamatanId'),
                         'usralNama' => $this->request->getVar('alamatNama'),
                         'usralJalan' => $this->request->getVar('jalan'),
                     ]);
@@ -109,34 +100,4 @@ class User extends BaseController
         return parent::grid();
     }
 
-    public function keranjangDetail($email){
-        $keranjangModel = new KeranjangModel();
-        
-        $response =  $this->response($keranjangModel->getKeranjangDetail(null, $email), 200);
-        return $this->response->setJSON($response);
-    }
-
-    // ============================================ //
-    private function _selectProvinsi(){
-        $data = $this->rajaOngkir->province();
-
-        $provinsi = [];
-        foreach($data['data'] as $row){
-            $provinsi[$row['province_id']] = $row['province'];
-        }
-
-        return $provinsi;
-    }
-
-    public function selectKota($id){
-        $data = $this->rajaOngkir->city(null, $id);
-
-        return $this->response->setJSON($data['data']);
-    }
-
-    public function selectKecamatan($cityId){
-        $data = $this->rajaOngkir->subdistrict($cityId);
-     
-        return $this->response->setJSON($data['data']);
-    }
 }

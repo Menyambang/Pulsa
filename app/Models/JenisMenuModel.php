@@ -19,4 +19,15 @@ class JenisMenuModel extends MyModel
     public function getPrimaryKeyName(){
         return $this->primaryKey;
     }
+
+    public function selectMenu(){
+        $data = $this->findAll();
+
+        $select= [];
+        foreach ($data as $key => $value) {
+            $select[$value->jnmId] = $value->jnmLabel;
+        }
+
+        return $select;
+    }
 }

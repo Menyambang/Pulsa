@@ -1,6 +1,6 @@
 <!-- Modal Tambah dan Edit -->
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel"><span id="aksi"></span> Data</h5>
@@ -11,19 +11,43 @@
             <form id="form">
                 <div class="modal-body">
                     <div class="form-group mb-3">
-                        <label for="">Menu Digital</label>
-                        <?= form_dropdown('menuId', $selectMenu, '', ['class' => 'form-control menuId select2', 'id' => 'menuId']); ?>
-                        <p class="text-danger" id="er_menuId"></p>
+                        <label for="">Jenis Menu</label>
+                        <?= form_dropdown('jenis', $jenisMenu, '', ['class' => 'form-control jenis select2', 'id' => 'jenis']); ?>
+                        <p class="text-danger" id="er_jenis"></p>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="">Show Home</label>
+                        <?= form_dropdown('showHome', [
+                            '1' => 'Ya',
+                            '0' => 'Tidak'
+                        ], '1', ['class' => 'form-control showHome select2', 'id' => 'showHome']); ?>
+                        <p class="text-danger" id="er_showHome"></p>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="">Nama</label>
-                        <input type="text" name="nama" id="nama" class="form-control readonly-background" placeholder="Nama">
-                        <p class="text-danger" id="er_nama"></p>
+                        <label for="">Label</label>
+                        <input type="text" name="label" id="label" class="form-control readonly-background" placeholder="Label">
+                        <p class="text-danger" id="er_label"></p>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="">Prefix Operator</label>
-                        <input type="text" name="prefix" id="prefix" class="form-control readonly-background" placeholder="0812,0822">
-                        <p class="text-danger" id="er_prefix"></p>
+                        <label for="">ID Operator</label>
+                        <input type="text" name="idOperator" id="idOperator" class="form-control readonly-background" placeholder="214,213,148,212,311,338,33">
+                        <p class="text-danger" id="er_idOperator"></p>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="">Kode Produk</label>
+                        <input type="text" name="kodeProdukPPOB" id="kodeProdukPPOB" class="form-control readonly-background" placeholder="(PPOB Single Produk)">
+                        <p class="text-danger" id="er_kodeProdukPPOB"></p>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="">Target URL</label>
+                        <input type="text" name="targetUrlWeb" id="targetUrlWeb" class="form-control readonly-background" placeholder="Untuk WebView Mobile">
+                        <p class="text-danger" id="er_targetUrlWeb"></p>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="">Deskripsi</label>
+                        <textarea name="deskripsi" id="deskripsi" class="form-control readonly-background" placeholder="Deskripsi (Opsional)"></textarea>
+                        <p class="text-danger" id="er_deskripsi"></p>
                     </div>
                     <div class="form-group mb-2">
                         <label for="">Icon</label>

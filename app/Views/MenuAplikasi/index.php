@@ -5,7 +5,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-6">
-                    <h3>Kategori</h3>
+                    <h3>Menu Aplikasi</h3>
                 </div>
                 <div class="col-6">
                     <button class="btn btn-sm btn-primary pull-right" id="btnTambah" data-toggle="modal" data-target="#modal"><i class="fa fa-plus"></i> Tambah</button>
@@ -30,9 +30,11 @@
                                     <tr>
                                         <th width="1%">No</th>
                                         <th width="5%">Icon</th>
-                                        <th width="20%">Menu</th>
-                                        <th width="30%">Nama</th>
-                                        <th width="20%">Prefix Operator</th>
+                                        <th width="20%">Label</th>
+                                        <th width="30%">Product</th>
+                                        <th width="20%">Category</th>
+                                        <th width="20%">Target URL</th>
+                                        <th width="20%">Type</th>
                                         <th width="10%">Aksi</th>
                                     </tr>
                                 </thead>
@@ -47,7 +49,7 @@
     </div>
     <!-- Container-fluid Ends-->
 
-    <?= $this->include('KategoriPulsa/modal'); ?>
+    <?= $this->include('MenuAplikasi/modal'); ?>
 </div>
 <?= $this->endSection(); ?>
 
@@ -86,13 +88,17 @@
             $('#modal').modal('show');
             $('#aksi').html('Ubah');
 
-            $('[name="nama"]').val(dataRow.nama);
-            $('[name="prefix"]').val(dataRow.prefix);
-            $('[name="menuId"]').val(dataRow.menuId).trigger('change');
+            $('[name="label"]').val(dataRow.label);
+            $('[name="idOperator"]').val(dataRow.idOperator);
+            $('[name="kodeProdukPPOB"]').val(dataRow.kodeProdukPPOB);
+            $('[name="targetUrlWeb"]').val(dataRow.targetUrlWeb);
+            $('[name="deskripsi"]').html(dataRow.deskripsi);
+            $('[name="jenis"]').val(dataRow.jenis).trigger('change');
+            $('[name="showHome"]').val(dataRow.showHome).trigger('change');
 
             if (dataRow.icon != '') {
                 krajeeConfig('[name="icon"]', {
-                    url: `<?= base_url('File/get/icon_kategori') ?>/${dataRow.icon}`,
+                    url: `<?= base_url('File/get/'.PATH_ICON_KATEGORI_PULSA) ?>/${dataRow.icon}`,
                     filename: dataRow.icon,
                     caption: `Icon Kategori`,
                     action: true,
@@ -213,13 +219,19 @@
                     }
                 },
                 {
-                    data: 'menu.nama',
+                    data: 'label',
                 },
                 {
-                    data: 'nama',
+                    data: 'kodeProdukPPOB',
                 },
                 {
-                    data: 'prefix',
+                    data: 'idOperator',
+                },
+                {
+                    data: 'targetUrlWeb',
+                },
+                {
+                    data: 'jenisMenu.label',
                 },
                 {
                     data: 'id',
@@ -344,9 +356,9 @@
                             </div>
                         </div>
                         <div>
-                            <small class="font-weight-bold"><span class="text-primary">${item.urutan}</span> ${item.prefix}</small> 
+                            <small class="font-weight-bold"><span class="text-primary">${item.urutan}</span> ${item.jenisMenu.label}</small> 
                         </div>
-                        <div><b>${item.nama}</b></div>
+                        <div><b>${item.label}</b></div>
                     </div>
                 </div>`;
         }
