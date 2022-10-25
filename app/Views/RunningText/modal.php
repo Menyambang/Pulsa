@@ -11,14 +11,22 @@
             <form id="form">
                 <div class="modal-body">
                     <div class="form-group mb-3">
-                        <label for="">Nama</label>
-                        <input type="text" name="nama" id="nama" class="form-control readonly-background" placeholder="Nama">
-                        <p class="text-danger" id="er_nama"></p>
+                        <label for="">Pesan</label>
+                        <input type="text" name="pesan" id="pesan" class="form-control readonly-background" placeholder="Pesan">
+                        <p class="text-danger" id="er_pesan"></p>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="">Status</label>
+                        <?= form_dropdown('status', [
+                            '1' => 'Aktif',
+                            '0' => 'Non Aktif'
+                        ], '1', ['class' => 'form-control status select2', 'id' => 'status']); ?>
+                        <p class="text-danger" id="er_status"></p>
                     </div>
                     <div class="form-group mb-2">
-                        <label for="">Icon</label>
-                        <input class="form-control" type="file" name="icon" placeholder="icon">
-                        <p class="text-danger" id="er_icon"></p>
+                        <label for="">Masa Aktif</label>
+                        <input class="form-control" type="date" name="expired" placeholder="expired">
+                        <p class="text-danger" id="er_expired"></p>
                     </div>
                 </div>
                 <div class="modal-footer">

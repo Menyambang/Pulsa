@@ -23,7 +23,7 @@
                         <h5 class="m-b-0">Feather Icons</h5>
                     </div> -->
                     <div class="card-body">
-                        <p class="card-text">Data Kategori.</p>
+                        <p class="card-text">Data Menu Aplikasi.</p>
                         <div class="table-responsive">
                             <table class="display" id="datatable" width="100%">
                                 <thead>

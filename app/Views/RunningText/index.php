@@ -5,7 +5,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-6">
-                    <h3>Kategori</h3>
+                    <h3>Running Text</h3>
                 </div>
                 <div class="col-6">
                     <button class="btn btn-sm btn-primary pull-right" id="btnTambah" data-toggle="modal" data-target="#modal"><i class="fa fa-plus"></i> Tambah</button>
@@ -22,15 +22,16 @@
                         <h5 class="m-b-0">Feather Icons</h5>
                     </div> -->
                     <div class="card-body">
-                        <p class="card-text">Data Kategori.</p>
+                        <p class="card-text">Data Running Text.</p>
                         <div class="table-responsive">
                             <table class="display" id="datatable" width="100%">
                                 <thead>
                                     <tr>
                                         <th width="1%">No</th>
-                                        <th width="5%">Icon</th>
-                                        <th width="70%">Nama</th>
-                                        <th width="10%">Aksi</th>
+                                        <th width="20%">Pesan</th>
+                                        <th width="30%">Status</th>
+                                        <th width="10%">Expired</th>
+                                        <th width="6%">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -44,7 +45,7 @@
     </div>
     <!-- Container-fluid Ends-->
 
-    <?= $this->include('Kategori/modal'); ?>
+    <?= $this->include('RunningText/modal'); ?>
 </div>
 <?= $this->endSection(); ?>
 
@@ -62,14 +63,15 @@
     var dataRow;
     $(document).ready(function() {
 
+        $('.select2').select2();
+
         $('#btnTambah').click(function(e) {
-            e.preventDefault();
             dataRow = null;
+            e.preventDefault();
             $('#aksi').html('Tambah');
             $('input').val('');
-            krajeeConfig('[name="icon"]', {
-                type: 'image'
-            });
+            $('textarea').html('');
+            $('form').trigger('reset');
         });
 
         $(document).on('click', '#btnEdit', function(e) {
@@ -79,21 +81,9 @@
             $('#modal').modal('show');
             $('#aksi').html('Ubah');
 
-            $('[name="nama"]').val(dataRow.nama);
-
-            if (dataRow.icon != '') {
-                krajeeConfig('[name="icon"]', {
-                    url: `<?= base_url('File/get/'.PATH_KATEGORI_PRODUK) ?>/${dataRow.icon}`,
-                    filename: dataRow.icon,
-                    caption: `Icon Kategori`,
-                    action: true,
-                    type: 'image',
-                });
-            } else {
-                krajeeConfig('[name="icon"]', {
-                    type: 'image'
-                });
-            }
+            $('[name="pesan"]').val(dataRow.pesan);
+            $('[name="status"]').val(dataRow.status).trigger('change');
+            $('[name="expired"]').val(dataRow.expired);
         });
 
         $(document).on('click', '#btnHapus', function(e) {
@@ -197,14 +187,20 @@
                     }
                 },
                 {
-                    data: 'icon',
+                    data: 'pesan',
+                },
+                {
+                    data: 'status',
                     render: function(val, type, row, meta) {
-                        let link = `<?= base_url('File') ?>/get/<?=PATH_KATEGORI_PRODUK?>/${val}`;
-                        return `<a href="${link}" target="_BLANK"><img  width="60px" class="img-fluid img-thumbnail js-tilt" src="${link}"  ></a>`;
+                        if(val == '1') return `<span class="badge badge-success text-light">Aktif</span>`;
+                        else return `<span class="badge badge-warning text-light">Non Aktif</span>`;
                     }
                 },
                 {
-                    data: 'nama',
+                    data: 'expired',
+                    render: function(val, type, row, meta) {
+                        return val;
+                    }
                 },
                 
                 {
