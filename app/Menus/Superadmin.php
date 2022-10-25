@@ -21,22 +21,22 @@ class Superadmin implements MenuInterface
             [
                 'title' => 'Menu Aplikasi',
                 'url' => 'MenuAplikasi',
-                'icon' => 'monitor',
+                'icon' => 'menu',
             ],
             [
                 'title' => 'Kategori',
                 'url' => 'Kategori',
-                'icon' => 'monitor',
+                'icon' => 'list',
             ],
             [
                 'title' => 'Banner',
                 'url' => 'Banner',
-                'icon' => 'monitor',
+                'icon' => 'airplay',
             ],
             [
                 'title' => 'Running Text',
                 'url' => 'RunningText',
-                'icon' => 'monitor',
+                'icon' => 'wind',
             ],
             [
                     'title' => 'User',
