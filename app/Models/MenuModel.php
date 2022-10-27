@@ -27,4 +27,15 @@ class MenuModel extends MyModel
             'jenisMenu' => ['table' => 'r_jenis_menu', 'condition' => 'jnmId = menuJenis', 'entity' => JenisMenu::class, 'type' => 'left'],
         ];
     }
+
+    public function selectMenu(){
+        $data = $this->findAll();
+
+        $select= [];
+        foreach ($data as $key => $value) {
+            $select[$value->menuId] = $value->menuLabel;
+        }
+
+        return $select;
+    }
 }

@@ -60,6 +60,14 @@
                                         </div>
                                     </div>
 
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-3 col-form-label">Maksimal Kode OTP (per hari)</label>
+                                        <div class="col-sm-9">
+                                            <input type="number" name="max_otp" id="max_otp" class="form-control readonly-background" value="<?= @$settings['max_otp'] ?>" placeholder="Maksimal Kode OTP">
+                                            <p class="text-danger" id="er_max_otp"></p>
+                                        </div>
+                                    </div>
+
 
                                 </div>
                             </div>

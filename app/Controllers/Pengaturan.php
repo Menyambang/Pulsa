@@ -23,6 +23,7 @@ class Pengaturan extends BaseController
         'tagline' => ['label' => 'Tagline', 'rules' => 'required'],
         'api_key' => ['label' => 'API KEY IRS', 'rules' => 'required'],
         'api_url' => ['label' => 'API URL IRS', 'rules' => 'required'],
+        'max_otp' => ['label' => 'Maksimal OTP', 'rules' => 'required|numeric'],
     ];
 
     protected $rulesAplikasiMobile = [
