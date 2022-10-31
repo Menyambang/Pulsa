@@ -259,9 +259,7 @@ class MyModel extends Model
         $callJoin = [];
         $callEntity = [];
         $callSeparator = '';
-        $jsonObject = "JSON_OBJECT(" . $this->entityToMysqlObject($entity) . $callSeparator . implode(', ', $callEntity) . ")";
-        $asObject = $asObject ? $jsonObject : "CONCAT('[',GROUP_CONCAT($jsonObject),']') AS $alias";
-
+      
         foreach ($callable as  $callbacks) {
             if (is_callable($callbacks))
             {
@@ -278,6 +276,11 @@ class MyModel extends Model
                 $callSeparator = ', ';
             }
         }
+
+        // JSON OBJECT
+        $jsonObject = "(JSON_OBJECT(" . $this->entityToMysqlObject($entity) . $callSeparator . implode(', ', $callEntity) . "))";
+        $asObject = $asObject ? $jsonObject : "CONCAT('[',GROUP_CONCAT($jsonObject),']')";
+        $asObject .= " AS $alias";
 
         // Group Data
         $hasGroup = !empty($group) ? "GROUP BY $group" : '';

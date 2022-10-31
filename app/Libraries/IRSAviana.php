@@ -102,25 +102,28 @@ class IRSAviana
      */
     private function execute($method, $url, $options = [])
     {
-        // $options['debug'] = WRITEPATH . '/logs/log_aviana.txt';
+        $options['debug'] = WRITEPATH . '/logs/log_aviana.txt';
 
         if (!isset($options['timeout'])) {
             $options['timeout'] = 60;
             $options['connect_timeout'] = 60;
         }
 
-        $response = $this->curl->request($method, $url, $options);
-
-        if ($response->getStatusCode() == 200) {
-            $jsonArray = json_decode($response->getBody(), true);
-            return $jsonArray;
-        } else {
-            return json_decode($response->getBody(), true);
-            return [
-                'code' => $response->getStatusCode(),
-                'message' => json_decode($response->getBody(), true),
-                'data' => null,
-            ];
+        try {
+            $response = $this->curl->request($method, $url, $options);
+            if ($response->getStatusCode() == 200) {
+                $jsonArray = json_decode($response->getBody(), true);
+                return $jsonArray;
+            } else {
+                return json_decode($response->getBody(), true);
+                return [
+                    'code' => $response->getStatusCode(),
+                    'message' => json_decode($response->getBody(), true),
+                    'data' => null,
+                ];
+            }
+        } catch (\Throwable $th) {
+            return ['msg' => $th->getMessage()];
         }
     }
 
@@ -347,4 +350,9 @@ class IRSAviana
     // ========================== END TICKET =============================== //
 
     // ========================== END V8 =============================== //
+
+
+    // ========================== V9 =============================== //
+    // ========================== END V9 =============================== //
+
 }
