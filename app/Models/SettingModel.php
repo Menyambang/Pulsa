@@ -4,8 +4,8 @@ use App\Models\MyModel;
 
 class SettingModel extends MyModel
 {
-    const RADIUS_KEY = 'radius_cod';
-    const BIAYA_KEY = 'biaya_cod';
+    const API_URL_KEY = 'api_url';
+    const API_SECRET_KEY = 'api_key';
 
     protected $table = "m_setting";
     protected $primaryKey = "setKey";

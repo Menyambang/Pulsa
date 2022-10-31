@@ -2,6 +2,7 @@
 
 namespace App\Libraries;
 
+use App\Models\SettingModel;
 use Exception;
 
 class IRSAviana
@@ -9,7 +10,6 @@ class IRSAviana
     private static $instances = [];
 
     private $curl = null;
-    private $versionApk = '5.13.1.235';
     private $baseUrl = 'http://128.199.225.33:8089';
     private $secretKey = '988FD5935BB9FBC3530314B2619BF603';
     private $noHp = '';
@@ -23,6 +23,11 @@ class IRSAviana
      */
     public function __construct($user)
     {
+        $pengaturan = new SettingModel();
+
+        $this->baseUrl = $pengaturan->getValue($pengaturan::API_URL_KEY);
+        $this->secretKey = $pengaturan->getValue($pengaturan::API_SECRET_KEY);
+
         $this->noHp = md5($user['noHp'] ?? $this->secretKey);
 
         $this->options = [];
@@ -35,7 +40,6 @@ class IRSAviana
             'Accept-Encoding' => 'gzip, deflate, br',
             'Connection' => 'keep-alive',
             'Content-Type' => 'application/x-www-form-urlencoded',
-            // 'Content-Length' => '52'
         ];
 
         if(isset($user['token'])){
@@ -175,6 +179,24 @@ class IRSAviana
     public function changePin($data)
     {
         return $this->setBody($data)->execute('POST', "/apps/v8/users/changepin");
+    }
+
+    public function register($data)
+    {
+        $this->noHp = md5($data['phone']);
+        
+        $data = array_merge(
+            $data, [
+                'uuid' => $this->noHp,
+            ]
+        );
+
+        return $this->setBody($data)->execute('POST', "/apps/v8/users/register", [
+            'headers' => [
+                'irsauth' => $this->generateIRSAuth($this->noHp), // V8
+                'x-auth-irs' => $this->generateXIRSAuth($this->noHp), // V9
+            ]
+        ]);
     }
 
     // ========================== END AKUN =============================== //

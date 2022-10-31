@@ -39,6 +39,7 @@ class User extends MyResourceController
         'kecamatanNama' => ['label' => 'Kecamatan', 'rules' => 'required'],
         'kecamatanNama' => ['label' => 'Kecamatan', 'rules' => 'required'],
         'jalan' => ['label' => 'Jalan', 'rules' => 'required'],
+        'zipcode' => ['label' => 'Zip Code', 'rules' => 'required'],
     ];
 
     protected $rulesUpdatePassword = [
@@ -246,6 +247,22 @@ class User extends MyResourceController
             $entity->password = $entity->hashPassword($entity->password);
             $entity->activeCode = $uuidV4;
             $entity->otpCode = $otpCode;
+
+            $irsRegister = $this->irs->register([
+                "pin" => "000000",
+                "name" => $this->request->getVar('nama'),
+                "address" => $this->request->getVar('jalan'),
+                "phone" => $this->request->getVar('noHp'),
+                "email" => $this->request->getVar('email'),
+                "province" => $this->request->getVar('provinsiId'),
+                "city" => $this->request->getVar('kotaId'),
+                "district" => $this->request->getVar('kecamatanId'),
+                "zipcode" => $this->request->getVar('zipcode')
+            ]);
+
+            if(!$irsRegister['status']){
+                return $this->convertResponse($irsRegister);
+            }
 
             try {
                 $status = $this->model->insert($entity, false);
