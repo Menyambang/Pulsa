@@ -70,6 +70,20 @@ $route->group("irs", function ($route) {
             $route->post("rekening", 'Api\IRSAvianaV8\Ticket::rekening');
         });
     });
+
+    $route->group("v9", function ($route) {
+        $route->group("user", ['filter' => 'apiFilter'], function ($route) {
+            $route->post("changePin", 'Api\IRSAvianaV9\User::changePin');
+        });
+        $route->group("histori", ['filter' => 'apiFilter'], function ($route) {
+            $route->post("rekapTrx", 'Api\IRSAvianaV9\Histori::rekapTrx');
+            $route->post("saldo", 'Api\IRSAvianaV9\Histori::saldo');
+            $route->post("transaksi", 'Api\IRSAvianaV9\Histori::transaksi');
+            $route->post("transfer", 'Api\IRSAvianaV9\Histori::transfer');
+            $route->post("topup", 'Api\IRSAvianaV9\Histori::topup');
+            $route->post("cetak", 'Api\IRSAvianaV9\Histori::cetak');
+        });
+    });
 });
 
 // TEST EMAIL

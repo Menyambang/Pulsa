@@ -353,6 +353,51 @@ class IRSAviana
 
 
     // ========================== V9 =============================== //
+    
+    // ========================== AKUN =============================== //
+    public function changePinV9($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v9/gantipin");
+    }
+    // ========================== END AKUN =============================== //
+
+    // ========================== HISTORI =============================== //
+    public function rekapTrxV9($data)
+    {
+        $data['uuid'] = $this->noHp;
+        return $this->execute('GET', "/apps/v9/rekaptrx?".http_build_query($data));
+    }
+
+    public function saldoV9($data)
+    {
+        $data['uuid'] = $this->noHp;
+        return $this->execute('GET', "/apps/v9/historisaldo?".http_build_query($data));
+    }
+
+    public function transaksiV9($data)
+    {
+        $data['uuid'] = $this->noHp;
+        return $this->execute('GET', "/apps/v9/historitrx?".http_build_query($data));
+    }
+
+    public function transferV9($data)
+    {
+        $data['uuid'] = $this->noHp;
+        return $this->execute('GET', "/apps/v9/historitrf?".http_build_query($data));
+    }
+
+    public function topupV9($data)
+    {
+        $data['uuid'] = $this->noHp;
+        return $this->execute('GET', "/apps/v9/historitopupdeposit?".http_build_query($data));
+    }
+
+    public function cetakV9($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v9/cetak");
+    }
+
+    // ========================== END HISTORI =============================== //
     // ========================== END V9 =============================== //
 
 }
