@@ -48,10 +48,7 @@ $routes->get("api/user/checkout/invoice/(:segment)", 'Api\Checkout::invoice/$1')
 
 $routes->group("api", ['filter' => 'apiKeyFilter'], function ($route) {
 	require_once APPPATH . "Config/Routes/Api.php";
-
-	$route->group("user", ['filter' => 'apiFilter'], function ($route) {
-		require_once APPPATH . "Config/Routes/User.php";
-	});
+	require_once APPPATH . "Config/Routes/User.php";
 });
 
 /*

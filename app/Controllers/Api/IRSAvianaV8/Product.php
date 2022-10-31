@@ -60,4 +60,11 @@ class Product extends MyResourceController
         return $this->convertResponse($response);
     }
 
+    public function getReward()
+    {
+        $response = $this->irs->getReward($this->request->getVar());
+
+        return $this->convertResponse($response);
+    }
+
 }

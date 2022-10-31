@@ -274,6 +274,11 @@ class IRSAviana
         return $this->setBody($data)->execute('POST', "/apps/v8/products/bydenom");
     }
 
+    public function getReward($data)
+    {
+        return $this->setBody($data)->execute('POST', "/apps/v8/utilities/rewards");
+    }
+
     // ========================== END PRODUCT =============================== //
 
     
