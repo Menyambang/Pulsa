@@ -1,5 +1,5 @@
 /*
-SQLyog Ultimate v12.5.1 (64 bit)
+SQLyog Ultimate v12.5.1  sas(64 bit)
 MySQL - 10.3.32-MariaDB-cll-lve : Database - u1068353_menyambang
 *********************************************************************
 */
