@@ -61,9 +61,6 @@ class Auth extends MyResourceController
             if (isset($irsActive['status']) && $irsActive['status'] == 1) {
                 $user->irs = $irsActive;
 
-                // echo '<pre>';
-                // print_r($user);
-                // echo '</pre>';exit;
                 $accessPayload = [
                     "iss" => base_url(),
                     "aud" => base_url(),

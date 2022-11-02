@@ -21,7 +21,7 @@ class MenuAplikasi extends BaseController
         'jenis' => ['label' => 'Jenis', 'rules' => 'required'],
         'showHome' => ['label' => 'Show Home', 'rules' => 'required'],
         'label' => ['label' => 'Label', 'rules' => 'required'],
-        'idOperator' => ['label' => 'ID Operator', 'rules' => 'required'],
+        'idOperator' => ['label' => 'ID Operator', 'rules' => 'trim'],
         'kodeProdukPPOB' => ['label' => 'Kode Produk PPOB', 'rules' => 'trim'],
         'targetUrlWeb' => ['label' => 'Target URL WEB', 'rules' => 'trim'],
         'deskripsi' => ['label' => 'Deskiripsi', 'rules' => 'trim'],

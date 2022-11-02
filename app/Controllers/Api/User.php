@@ -26,7 +26,7 @@ class User extends MyResourceController
         'email' => ['label' => 'email', 'rules' => 'required|cek_email_terdaftar|valid_email'],
         'nama' => ['label' => 'nama', 'rules' => 'required'],
         'password' => ['label' => 'password', 'rules' => 'required'],
-        'noHp' => ['label' => 'No Hp', 'rules' => 'required|numeric'],
+        'noHp' => ['label' => 'No Hp', 'rules' => 'required|numeric|cek_nohp_terdaftar'],
         'noWa' => ['label' => 'No Whatsapp', 'rules' => 'required|numeric'],
         'latitude' => ['label' => 'Lokasi Sekarang', 'rules' => 'required'],
         'longitude' => ['label' => 'Lokasi Sekarang', 'rules' => 'required'],
