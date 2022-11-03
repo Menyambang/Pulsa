@@ -5,10 +5,8 @@ namespace App\Controllers\Api;
 use Firebase\JWT\JWT;
 use App\Models\UserModel;
 use Firebase\JWT\ExpiredException;
-use Illuminate\Support\Facades\Route;
 use Firebase\JWT\BeforeValidException;
 use App\Controllers\MyResourceController;
-use App\Controllers\BaseResourceController;
 use App\Entities\User;
 use App\Libraries\IRSAviana;
 use App\Models\FingerprintDevicesModel;
@@ -195,7 +193,7 @@ class Auth extends MyResourceController
             $keyRefresh = config("App")->JWTKeyRefresh;
 
             $otpModel = new KodeOtpModel();
-            $otp = $otpModel->where(['ktOtpCode' => $otpCode, 'ktPhoneNumber' => $phoneNumber])->find();
+            $otp = $otpModel->where(['ktOtpCode' => $otpCode, 'ktPhoneNumber' => $phoneNumber, 'DATE(ktCreatedAt)' => date('Y-m-d')])->find();
             $otp = current($otp);
 
             if (empty($otp)) {
@@ -235,6 +233,8 @@ class Auth extends MyResourceController
                     $accessToken = JWT::encode($accessPayload, $keyAccess);
                     $refreshToken = JWT::encode($refreshPayload, $keyRefresh);
 
+                    $otpModel->where(['ktOtpCode' => $otpCode, 'ktPhoneNumber' => $phoneNumber])->delete();
+
                     return $this->response(['accessToken' => $accessToken, 'refreshToken' => $refreshToken], 200);
                 } else {
                     return $this->response(null, 400, $irsActive['msg']);
@@ -266,7 +266,7 @@ class Auth extends MyResourceController
             $jumlahOTP = count($jumlahOTP);
 
             $settingModel = new SettingModel();
-            if($jumlahOTP == $settingModel->getValue($settingModel::MAX_OTP)){
+            if($jumlahOTP >= $settingModel->getValue($settingModel::MAX_OTP)){
                 return $this->response(null, 400, 'Limit OTP Hari ini sudah maksimal');
             }
 
