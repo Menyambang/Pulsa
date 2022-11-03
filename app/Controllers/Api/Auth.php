@@ -10,7 +10,10 @@ use Firebase\JWT\BeforeValidException;
 use App\Controllers\MyResourceController;
 use App\Controllers\BaseResourceController;
 use App\Entities\User;
+use App\Libraries\IRSAviana;
 use App\Models\FingerprintDevicesModel;
+use App\Models\KodeOtpModel;
+use App\Models\SettingModel;
 use Firebase\JWT\SignatureInvalidException;
 
 /**
@@ -169,6 +172,136 @@ class Auth extends MyResourceController
             } else {
                 return $this->response(null, 400, 'User tidak ditemukan');
             }
+        } else {
+            return $this->response(null, 400, $this->validator->getErrors());
+        }
+    }
+
+    /**
+     * Verifikasi Login Kode OTP
+     *
+     * @return void
+     */
+    public function verifikasiOtpCode()
+    {
+        if ($this->validate([
+            'phoneNumber' => 'required',
+            'otpCode' => 'required',
+        ])) {
+            $phoneNumber = $this->request->getPost("phoneNumber");
+            $otpCode = $this->request->getPost("otpCode");
+
+            $keyAccess = config("App")->JWTKeyAccess;
+            $keyRefresh = config("App")->JWTKeyRefresh;
+
+            $otpModel = new KodeOtpModel();
+            $otp = $otpModel->where(['ktOtpCode' => $otpCode, 'ktPhoneNumber' => $phoneNumber])->find();
+            $otp = current($otp);
+
+            if (empty($otp)) {
+                return $this->response(null, 400, 'Kode OTP Salah');
+            }
+
+            $model = new UserModel();
+            $model->select('*');
+            $user = current($model->where(['usrNoHp' => $phoneNumber])->find());
+
+            if (isset($user)) {
+              
+                $irsActive = $this->irs->auth($user->noHp);
+
+                if (isset($irsActive['status']) && $irsActive['status'] == 1) {
+                    $user->irs = $irsActive;
+
+                    $accessPayload = [
+                        "iss" => base_url(),
+                        "aud" => base_url(),
+                        "iat" => time(),
+                        "nbf" => time(),
+                        "exp" => time() + self::LIFETIME_ACCESS_TOKEN,
+                        "irs" => $irsActive,
+                        "user" => $user->toArray(),
+                    ];
+                    $refreshPayload = [
+                        "iss" => base_url(),
+                        "aud" => base_url(),
+                        "iat" => time(),
+                        "nbf" => time(),
+                        "exp" => time() + self::LIFETIME_REFRESH_TOKEN,
+                        "irs" => $irsActive,
+                        "user" => $user->toArray(),
+                    ];
+
+                    $accessToken = JWT::encode($accessPayload, $keyAccess);
+                    $refreshToken = JWT::encode($refreshPayload, $keyRefresh);
+
+                    return $this->response(['accessToken' => $accessToken, 'refreshToken' => $refreshToken], 200);
+                } else {
+                    return $this->response(null, 400, $irsActive['msg']);
+                }
+            } else {
+                return $this->response(null, 400, 'User tidak ditemukan');
+            }
+        } else {
+            return $this->response(null, 400, $this->validator->getErrors());
+        }
+    }
+
+    /**
+     * Mengirim Ulang Kode OTP dan Membuat akun jika belum tersedia
+     *
+     * @return void
+     */
+    public function resendOtpCode()
+    {
+        if ($this->validate([
+            'phoneNumber' => 'required',
+        ])) {
+            $phoneNumber = $this->request->getPost("phoneNumber");
+
+            $otpModel = new KodeOtpModel();
+
+            // Cek Limit OTP
+            $jumlahOTP = $otpModel->where(['ktPhoneNumber' => $phoneNumber, 'DATE(ktCreatedAt)' => date('Y-m-d') ])->find();
+            $jumlahOTP = count($jumlahOTP);
+
+            $settingModel = new SettingModel();
+            if($jumlahOTP == $settingModel->getValue($settingModel::MAX_OTP)){
+                return $this->response(null, 400, 'Limit OTP Hari ini sudah maksimal');
+            }
+
+            // Buat Akun
+            $userModel = new UserModel();
+            $userData = current($userModel->where(['usrNoHp' => $phoneNumber])->find());
+
+            if(empty($userData)){
+                $irsAuth = $this->irs->auth($phoneNumber);
+          
+                if(isset($irsAuth['status']) && $irsAuth['status']){
+                    $this->irs = new IRSAviana($irsAuth);
+                    $akun = $this->irs->getProfile();
+                
+                    $userModel->insert([
+                        'usrEmail' => $akun['data']['email'],
+                        'usrNama' => $akun['data']['namars'],
+                        'usrIsActive' => '1',
+                        'usrNoHp' => $phoneNumber,
+                        'usrNoWa' => $phoneNumber,
+                    ]);
+                }else{
+                    return $this->response(null, 400, 'Akun IRS Tidak Terdaftar');
+                }
+            }
+
+            $otpCode = random_string('numeric', '6');
+            $otpModel->insert([
+                'ktPhoneNumber' => $phoneNumber,
+                'ktOtpCode' => $otpCode,
+            ]);
+
+            return $this->response(null, 200, 'OTP Berhasil dikirim');
+             
+            return $this->response(null, 400, 'User tidak ditemukan');
         } else {
             return $this->response(null, 400, $this->validator->getErrors());
         }

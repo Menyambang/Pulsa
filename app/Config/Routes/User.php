@@ -2,8 +2,8 @@
 
 $route->post("user/register", 'Api\User::register');
 $route->post("user/reset_password", 'Api\User::resetPassword');
-$route->post("user/resend_otp_code", 'Api\User::resendOtpCode');
-$route->post("user/verifikasi_otp_code", 'Api\User::verifikasiOtpCode');
+$route->post("user/resend_otp_code", 'Api\Auth::resendOtpCode');
+$route->post("user/verifikasi_otp_code", 'Api\Auth::verifikasiOtpCode');
 
 $route->group("user", ['filter' => 'apiFilter'], function ($route) {
     $route->resource("data", ['controller' => 'Api\User', 'only' => ['index', 'show', 'create', 'update']]);

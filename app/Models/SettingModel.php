@@ -6,6 +6,7 @@ class SettingModel extends MyModel
 {
     const API_URL_KEY = 'api_url';
     const API_SECRET_KEY = 'api_key';
+    const MAX_OTP = 'max_otp';
 
     protected $table = "m_setting";
     protected $primaryKey = "setKey";
