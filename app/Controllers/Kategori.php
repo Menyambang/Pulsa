@@ -51,11 +51,7 @@ class Kategori extends BaseController
 			if ($this->validate($this->rules)) {
 
                 $post = $this->request->getVar();
-                // if(empty($primary)){
-                    $post['urutan'] = count($this->model->find()) + 1;
-                    $this->request->setGlobal("request", $post);
-                // }
-
+              
 				try {
 					$primaryId = $this->request->getVar($primary);
 
