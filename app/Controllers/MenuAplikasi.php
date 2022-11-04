@@ -85,10 +85,10 @@ class MenuAplikasi extends BaseController
         }
 
         $post = $this->request->getVar();
-        if(empty($primary)){
+        // if(empty($primary)){
             $post['urutan'] = count($this->model->find()) + 1;
             $this->request->setGlobal("request", $post);
-        }
+        // }
 
         return parent::simpan($primary);
     }
