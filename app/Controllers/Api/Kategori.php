@@ -29,16 +29,16 @@ class Kategori extends MyResourceController
         'deletedAt' => ['label' => 'deletedAt', 'rules' => 'required'],
     ];
 
-    public function index()
-    {
-        $data = parent::index();
-        $data = json_decode($data->getBody(), true);
+    // public function index()
+    // {
+    //     $data = parent::index();
+    //     $data = json_decode($data->getBody(), true);
 
-        foreach ($data['data']['rows'] as $kK => $vK) {
-            sort($vK['menu']);
-            $data['data']['rows'][$kK]['menu'] = $vK['menu'];
-        }
+    //     foreach ($data['data']['rows'] as $kK => $vK) {
+    //         usort($vK['menu'], function ($a, $b) { return strnatcmp($a['urutan'], $b['urutan']); });
+    //         $data['data']['rows'][$kK]['menu'] = $vK['menu'];
+    //     }
         
-        return $this->respond($data);
-    }
+    //     return $this->respond($data);
+    // }
 }

@@ -28,7 +28,7 @@ class KategoriModel extends MyModel
     protected function relationships()
    {
        return [
-           'menu' => $this->hasMany('(SELECT * FROM `t_kategori_menu` JOIN `m_menu` m ON `ktmMenuId` = m.`menuId`) as menu', Menu::class, 'ktmMenuId = menuId AND ktmKtgId = ktgId', 'menu', 'ktmKtgId', 'left', function($rel){
+           'menu' => $this->rOrderBy('menuUrutan', 'ASC')->hasMany('(SELECT * FROM `t_kategori_menu` JOIN `m_menu` m ON `ktmMenuId` = m.`menuId`) as menu', Menu::class, 'ktmMenuId = menuId AND ktmKtgId = ktgId', 'menu', 'ktmKtgId', 'left', function(MyModel $rel){
                 return $rel->belongsTo('r_jenis_menu', JenisMenu::class, 'jnmId = menuJenis', 'jenisMenu', 'jnmId');
            }),
        ];

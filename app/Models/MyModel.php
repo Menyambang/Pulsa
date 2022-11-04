@@ -222,6 +222,20 @@ class MyModel extends Model
 
         return implode(",",$jsonEntity);
     }
+
+    protected $rType = 'LEFT';
+    protected function rJoinType($type){
+        $this->rType = $type;
+
+        return $this;
+    }
+
+    protected $rOrder = '';
+    protected function rOrderBy($field, $type = 'ASC'){
+        $this->rOrder = ' ORDER BY '.$field.' '.$type;
+
+        return $this;
+    }
     
     /**
      * Many Array of object Relation
@@ -263,6 +277,7 @@ class MyModel extends Model
         foreach ($callable as  $callbacks) {
             if (is_callable($callbacks))
             {
+                // Call again this class
                 $callbacksData = $callbacks($this);
 
                 // Not Return callback
@@ -277,9 +292,13 @@ class MyModel extends Model
             }
         }
 
+        // Method Chaining Data        
+        $type = $type ?? $this->rType;
+        $order = $this->rOrder;
+
         // JSON OBJECT
-        $jsonObject = "(JSON_OBJECT(" . $this->entityToMysqlObject($entity) . $callSeparator . implode(', ', $callEntity) . "))";
-        $asObject = $asObject ? $jsonObject : "CONCAT('[',GROUP_CONCAT($jsonObject),']')";
+        $jsonObject = "JSON_OBJECT(" . $this->entityToMysqlObject($entity) . $callSeparator . implode(', ', $callEntity) . ") ";
+        $asObject = $asObject ? $jsonObject : "CONCAT('[',GROUP_CONCAT($jsonObject ".$order."),']')";
         $asObject .= " AS $alias";
 
         // Group Data
