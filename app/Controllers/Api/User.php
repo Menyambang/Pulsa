@@ -40,6 +40,7 @@ class User extends MyResourceController
         'kecamatanNama' => ['label' => 'Kecamatan', 'rules' => 'required'],
         'jalan' => ['label' => 'Jalan', 'rules' => 'required'],
         'zipcode' => ['label' => 'Zip Code', 'rules' => 'required'],
+        'pin' => ['label' => 'PIN', 'rules' => 'required|numeric|max_length[6]|min_length[6]'],
     ];
 
     protected $rulesUpdatePassword = [
@@ -249,7 +250,7 @@ class User extends MyResourceController
             $entity->otpCode = $otpCode;
 
             $irsRegister = $this->irs->register([
-                "pin" => "000000",
+                "pin" => $this->request->getVar('pin'),
                 "name" => $this->request->getVar('nama'),
                 "address" => $this->request->getVar('jalan'),
                 "phone" => $this->request->getVar('noHp'),
@@ -273,31 +274,34 @@ class User extends MyResourceController
                 }
 
                 if ($status) {
-                    $modelUserAlamat = new UserAlamatModel();
-                    $modelUserAlamat->insert([
-                        'usralUsrEmail' => $entity->email,
-                        'usralNama' => 'Rumah',
-                        'usralLatitude' => $this->request->getVar('latitude'),
-                        'usralLongitude' => $this->request->getVar('longitude'),
-                        'usralKotaId' => $this->request->getVar('kotaId'),
-                        'usralKotaNama' => $this->request->getVar('kotaNama'),
-                        'usralKotaTipe' => $this->request->getVar('kotaTipe'),
-                        'usralProvinsiId' => $this->request->getVar('provinsiId'),
-                        'usralProvinsiNama' => $this->request->getVar('provinsiNama'),
-                        'usralKecamatanId' => $this->request->getVar('kecamatanId'),
-                        'usralKecamatanNama' => $this->request->getVar('kecamatanNama'),
-                        'usralJalan' => $this->request->getVar('jalan'),
-                        'usralIsActive' => 1,
-                        'usralIsFirst' => 1,
-                    ]);
-                }
+                    // $modelUserAlamat = new UserAlamatModel();
+                    // $modelUserAlamat->insert([
+                    //     'usralUsrEmail' => $entity->email,
+                    //     'usralNama' => 'Rumah',
+                    //     'usralLatitude' => $this->request->getVar('latitude'),
+                    //     'usralLongitude' => $this->request->getVar('longitude'),
+                    //     'usralKotaId' => $this->request->getVar('kotaId'),
+                    //     'usralKotaNama' => $this->request->getVar('kotaNama'),
+                    //     'usralKotaTipe' => $this->request->getVar('kotaTipe'),
+                    //     'usralProvinsiId' => $this->request->getVar('provinsiId'),
+                    //     'usralProvinsiNama' => $this->request->getVar('provinsiNama'),
+                    //     'usralKecamatanId' => $this->request->getVar('kecamatanId'),
+                    //     'usralKecamatanNama' => $this->request->getVar('kecamatanNama'),
+                    //     'usralJalan' => $this->request->getVar('jalan'),
+                    //     'usralIsActive' => 1,
+                    //     'usralIsFirst' => 1,
+                    // ]);
+                    
+                    $this->_waMessageOTP($entity->noWa, $otpCode);
+                    Notification::sendEmail($entity->email, 'Verifikasi', view('Template/email/verifikasi', [
+                        'nama' => $entity->nama,
+                        'key' => $uuidV4,
+                    ]));
 
-                $this->_waMessageOTP($entity->noWa, $otpCode);
-                Notification::sendEmail($entity->email, 'Verifikasi', view('Template/email/verifikasi', [
-                    'nama' => $entity->nama,
-                    'key' => $uuidV4,
-                ]));
-                return $this->response(null, ($status ? 200 : 500), ($status ? 'Akun berhasil didaftarkan, silahkan cek email atau Kode OTP pada WA anda untuk mengaktivasi akun anda' : null));
+                    return $this->response(null, ($status ? 200 : 500), ($status ? 'Akun berhasil didaftarkan, silahkan cek email atau Kode OTP pada WA anda untuk mengaktivasi akun anda' : null));
+                } else {
+                    return $this->response(null, 500, 'Registrasi Gagal');
+                }
             } catch (DatabaseException $ex) {
                 return $this->response(null, 500, $ex->getMessage());
             } catch (\mysqli_sql_exception $ex) {

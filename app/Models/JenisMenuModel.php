@@ -11,6 +11,9 @@ class JenisMenuModel extends MyModel
     protected $returnType = "App\Entities\JenisMenu";
     protected $allowedFields = ["jnmLabel","jnsDeletedAt"];
 
+	protected $deletedField = 'jnsDeletedAt';
+    protected $useSoftDeletes = true;
+
     public function getReturnType()
     {
         return $this->returnType;
