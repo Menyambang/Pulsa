@@ -13,7 +13,7 @@ class KategoriModel extends MyModel
     protected $createdField = "ktgCreatedAt";
     protected $updatedField = "ktgUpdatedAt";
     protected $returnType = "App\Entities\Kategori";
-    protected $allowedFields = ["ktgTitle", "ktgShow", "ktgUrutan", "ktgDeletedAt"];
+    protected $allowedFields = ["ktgTitle", "ktgShow", "ktgUrutan", "ktgUsrId", "ktgDeletedAt"];
 
     public function getReturnType()
     {
@@ -25,12 +25,22 @@ class KategoriModel extends MyModel
         return $this->primaryKey;
     }
 
+    public function filterUsr($usrId)
+    {
+        if(!empty($usrId))
+        {
+            $this->where("ktgUsrId", $usrId);
+    
+            return $this;
+        }
+    }
+
     protected function relationships()
-   {
-       return [
-           'menu' => $this->rOrderBy('menuUrutan', 'ASC')->hasMany('(SELECT * FROM `t_kategori_menu` JOIN `m_menu` m ON `ktmMenuId` = m.`menuId`) as menu', Menu::class, 'ktmMenuId = menuId AND ktmKtgId = ktgId', 'menu', 'ktmKtgId', 'left', function(MyModel $rel){
+    {
+        return [
+            'menu' => $this->rOrderBy('menuUrutan', 'ASC')->hasMany('(SELECT * FROM `t_kategori_menu` JOIN `m_menu` m ON `ktmMenuId` = m.`menuId`) as menu', Menu::class, 'ktmMenuId = menuId AND ktmKtgId = ktgId', 'menu', 'ktmKtgId', 'left', function (MyModel $rel) {
                 return $rel->belongsTo('r_jenis_menu', JenisMenu::class, 'jnmId = menuJenis', 'jenisMenu', 'jnmId');
-           }),
-       ];
-   }
+            }),
+        ];
+    }
 }

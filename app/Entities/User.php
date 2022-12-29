@@ -12,6 +12,7 @@ class User extends MyEntity
     ];
 
     protected $datamap = [
+        'usrId' => 'usrId',
         'email' => 'usrEmail',
         'nama' => 'usrNama',
         'password' => 'usrPassword',
@@ -38,6 +39,7 @@ class User extends MyEntity
     ];
 
     protected $show = [
+        'usrId',
         'email',
         'nama',
         // 'password',

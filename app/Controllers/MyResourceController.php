@@ -37,6 +37,8 @@ class MyResourceController extends ResourceController
 
         $this->user = count($request->fetchGlobal('decoded')) > 0 ? $request->fetchGlobal('decoded') : ['role' => '', 'filterIdentifier' => ''];
         $this->irs = new IRSAviana(array_merge($this->user, $request->fetchGlobal('irs') ?? []));
+        $this->usrId = $request->fetchGlobal('usr')['id'] ?? '';
+
 		date_default_timezone_set('Asia/Kuala_Lumpur');
     }
 
@@ -49,6 +51,8 @@ class MyResourceController extends ResourceController
      */
     public function index()
     {
+        $this->model->filterUsr($this->usrId);
+
         $this->applyQueryFilter();
         $limit = $this->request->getGet("limit") ? $this->request->getGet("limit") : $this->defaultLimitData;
         $offset = $this->request->getGet("offset") ? $this->request->getGet("offset") : 0;

@@ -10,6 +10,9 @@ class MyModel extends Model
 {
     protected $hasAddedInJoin = [];
 
+    public function filterUsr($usrId){
+    }
+
     public function update($id = null, $data = null): bool
     {
         $builder = $this->builder();

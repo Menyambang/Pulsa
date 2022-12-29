@@ -12,7 +12,7 @@ class BannerModel extends MyModel
     protected $createdField = "bnrCreatedAt";
     protected $updatedField = "bnrUpdatedAt";
     protected $returnType = "App\Entities\Banner";
-    protected $allowedFields = ["bnrDeskripsi","bnrGambar","bnrUrl","bnrJenis","bnrProdukId","bnrType","bnrDeletedAt"];
+    protected $allowedFields = ["bnrDeskripsi","bnrGambar","bnrUrl","bnrJenis","bnrUsrId","bnrProdukId","bnrType","bnrDeletedAt"];
 
     public function getReturnType()
     {
@@ -21,6 +21,16 @@ class BannerModel extends MyModel
     
     public function getPrimaryKeyName(){
         return $this->primaryKey;
+    }
+
+    public function filterUsr($usrId)
+    {
+        if(!empty($usrId))
+        {
+            $this->where("bnrUsrId", $usrId);
+    
+            return $this;
+        }
     }
 
     protected function relationships()

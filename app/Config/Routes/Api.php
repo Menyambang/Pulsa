@@ -10,6 +10,9 @@
 $route->resource("kategori", ['controller' => 'Api\Kategori', 'only' => ['index', 'show']]);
 $route->resource("banner", ['controller' => 'Api\Banner', 'only' => ['index', 'show']]);
 $route->resource("setting", ['controller' => 'Api\Setting', 'only' => ['index', 'show']]);
+$route->resource("menu", ['controller' => 'Api\Menu', 'only' => ['index', 'show']]);
+$route->resource("runningText", ['controller' => 'Api\Menu', 'only' => ['index', 'show']]);
+$route->resource("setting", ['controller' => 'Api\Menu', 'only' => ['index', 'show']]);
 // $route->resource("service_center", ['controller' => 'Api\ServiceCenter', 'only' => ['index', 'show']]);
 // $route->resource("metode_pembayaran", ['controller' => 'Api\MetodePembayaran', 'only' => ['index', 'show']]);
 

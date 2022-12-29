@@ -13,7 +13,7 @@ class SettingModel extends MyModel
     protected $createdField = "setCreatedAt";
     protected $updatedField = "setUpdatedAt";
     protected $returnType = "App\Entities\Setting";
-    protected $allowedFields = ["setKey","setValue","setDeletedAt"];
+    protected $allowedFields = ["setKey","setValue","setUsrId","setDeletedAt"];
 
     public function getReturnType()
     {
@@ -22,6 +22,16 @@ class SettingModel extends MyModel
     
     public function getPrimaryKeyName(){
         return $this->primaryKey;
+    }
+
+    public function filterUsr($usrId)
+    {
+        if(!empty($usrId))
+        {
+            $this->where("setUsrId", $usrId);
+    
+            return $this;
+        }
     }
 
     public function getAllSettingKey(){

@@ -3,6 +3,7 @@
 namespace App\Filters;
 
 use App\Libraries\MyMultipartParser\MyRequestParser;
+use App\Models\UserWebModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Filters\FilterInterface;
@@ -36,9 +37,19 @@ class ApiKeyFilter implements FilterInterface
             $request->setGlobal("request", $param->params);
         }
 
-        $apiKeys = [config("App")->apiKeys, self::API_KEY_TOKPED, self::API_KEY_DIGIPOS];
+        $apiKeys = [
+            // config("App")->apiKeys, 
+            self::API_KEY_TOKPED, 
+            self::API_KEY_DIGIPOS
+        ];
 
         $apiKeyHeader = $request->getHeader("X-ApiKey");
+
+        // Api Keys Form User Web
+        $userWebModel = new UserWebModel();
+        $userWebData = $userWebModel->where('usrwebApiKey', $apiKeyHeader->getValue())->find();
+        
+        $apiKeys = array_merge($apiKeys, array_column($userWebData, 'usrwebApiKey'));
 
         if (!isset($apiKeyHeader)) {
             $response = service("response");
@@ -47,6 +58,8 @@ class ApiKeyFilter implements FilterInterface
         } elseif (!in_array($apiKeyHeader->getValue(), $apiKeys)) {
             $response->setJSON(['code' => 401, 'data' => null, 'message' => 'Gagal Otorisasi, Api Key Salah']);
             return $response;
+        }else{
+            $request->setGlobal("usr", ['id' => current($userWebData)->username]);
         }
     }
 

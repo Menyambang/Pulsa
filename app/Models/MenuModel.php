@@ -10,7 +10,7 @@ class MenuModel extends MyModel
     protected $createdField = "menuCreatedAt";
     protected $updatedField = "menuUpdatedAt";
     protected $returnType = "App\Entities\Menu";
-    protected $allowedFields = ["menuLabel","menuIdOperator","menuJenis","menuShowHome","menuUrutan","menuIcon","menuKodeProdukPPOB","menuTargetUrlWeb","menuDeskripsi","menuDeletedAt"];
+    protected $allowedFields = ["menuLabel","menuIdOperator","menuJenis","menuUsrId","menuShowHome","menuUrutan","menuIcon","menuKodeProdukPPOB","menuTargetUrlWeb","menuDeskripsi","menuDeletedAt"];
 
     public function getReturnType()
     {
@@ -19,6 +19,16 @@ class MenuModel extends MyModel
     
     public function getPrimaryKeyName(){
         return $this->primaryKey;
+    }
+
+    public function filterUsr($usrId)
+    {
+        if(!empty($usrId))
+        {
+            $this->where("menuUsrId", $usrId);
+    
+            return $this;
+        }
     }
 
     protected function relationships()
