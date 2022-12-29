@@ -35,7 +35,7 @@ class Pengaturan extends BaseController
     {
         return $this->template->setActiveUrl('Pengaturan')
             ->view("Pengaturan/index", [
-                'settings' => $this->model->getAllSettingKey(),
+                'settings' => $this->model->getAllSettingKey($this->username),
             ]);
     }
 
@@ -46,14 +46,17 @@ class Pengaturan extends BaseController
                 $data = $this->request->getVar();
                 $normalData = [];
                 foreach ($data as $key => $value) {
-                    $normalData[] = [
+                    $normalData = [
                         'setKey' => $key,
                         'setValue' => $value,
+                        'setUsrId' => $this->username
                     ];
+
+                    $this->model->replace($normalData);
                 }
 
                 // Replace data
-                $this->model->updateBatch($normalData, 'setKey');
+                // $this->model->updateBatch($normalData, 'setKey');
 
                 $response =  $this->response(null, 200, 'Pengaturan berhasil disimpan');
                 return $this->response->setJSON($response);
@@ -90,14 +93,17 @@ class Pengaturan extends BaseController
                 $data = $this->request->getVar();
                 $normalData = [];
                 foreach ($data as $key => $value) {
-                    $normalData[] = [
+                    $normalData = [
                         'setKey' => $key,
                         'setValue' => $value,
+                        'setUsrId' => $this->username
                     ];
+
+                    $this->model->replace($normalData);
                 }
 
                 // Replace data
-                $this->model->updateBatch($normalData, 'setKey');
+                // $this->model->updateBatch($normalData, 'setKey');
 
                 $response =  $this->response(null, 200, 'Pengaturan berhasil disimpan');
                 return $this->response->setJSON($response);

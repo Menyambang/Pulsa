@@ -34,7 +34,8 @@ class SettingModel extends MyModel
         }
     }
 
-    public function getAllSettingKey(){
+    public function getAllSettingKey($usrId){
+        $this->where("setUsrId", $usrId);
         $data = $this->find();
 
         $res = [];

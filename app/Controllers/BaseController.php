@@ -54,6 +54,7 @@ class BaseController extends Controller
 		//--------------------------------------------------------------------
 		// E.g.: $this->session = \Config\Services::session();
 		$this->session = \Config\Services::session();
+		$this->username = $this->session->get('username');
 		$this->validator = Services::validation();
 		$this->template = Services::template([], true);
 		$this->acl = new AclModel();
@@ -94,6 +95,8 @@ class BaseController extends Controller
 
 		$this->_applyFillter($request);
 
+		$this->model->filterUsr($this->username);
+
 		$response = $this->model->dataTableHandler($this->request->getGet());
 		return $this->response->setJSON($response);
 	}
@@ -102,9 +105,18 @@ class BaseController extends Controller
 	{
 	}
 
+	public function afterSimpan($primaryId){
+	}
+
+	public function beforeSimpan($primaryId){
+	}
+
 	public function simpan($primary = '')
 	{
 		if ($this->request->isAJAX()) {
+			$post = $this->request->getVar();
+            $post['usrId'] = $this->username;
+            $this->request->setGlobal("request", $post);
 
 			helper('form');
 			if ($this->validate($this->rules)) {
@@ -119,6 +131,9 @@ class BaseController extends Controller
 
 				try {
 					$primaryId = $this->request->getVar($primary);
+
+					$this->beforeSimpan($primaryId);
+					
 					$entityClass = $this->model->getReturnType();
 					$entity = new $entityClass();
 					$entity->fill($this->request->getVar());
@@ -137,6 +152,8 @@ class BaseController extends Controller
 
 					$this->model->transComplete();
 					$status = $this->model->transStatus();
+
+					$this->afterSimpan($primaryId);
 
 					if ($this->isUploadWithId) {
 						try {
@@ -170,6 +187,7 @@ class BaseController extends Controller
 	{
 		try {
 			$this->model->transStart();
+			$this->model->filterUsr($this->username);
 			$cek = $this->model->find($id);
 			if ($cek) {
 				$status = $this->model->delete($id);
@@ -218,12 +236,14 @@ class BaseController extends Controller
 
 	public function findAll()
 	{
+		$this->model->filterUsr($this->username);
 		$data = $this->model->find();
 		return $this->response->setJSON($data);
 	}
 
 	public function show()
 	{
+		$this->model->filterUsr($this->username);
 		$this->applyQueryFilter();
 		$limit = $this->request->getGet("limit") ? $this->request->getGet("limit") : $this->defaultLimitData;
 		$offset = $this->request->getGet("offset") ? $this->request->getGet("offset") : 0;

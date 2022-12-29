@@ -44,77 +44,39 @@ class Kategori extends BaseController
         return parent::grid();
     }
 
+    public function afterSimpan($primaryId){
+        try {
+            $dataMenu = [];
+            $kategoriMenuModel = new KategoriMenuModel();
+            $kategoriMenuModel->where(['ktmKtgId' => $primaryId])->delete();
+            foreach ($this->request->getVar('menu') as $menuId) {
+                $dataMenu[] = [
+                    'ktmKtgId' => $primaryId,
+                    'ktmMenuId' => $menuId,
+                ];
+            }
+
+            $kategoriMenuModel->insertBatch($dataMenu);
+
+        } catch (\Exception $ex) {
+            $response =  $this->response(null, 500, $ex->getMessage());
+            return $this->response->setJSON($response);
+        }
+    }
+
+    public function beforeSimpan($primaryId)
+    {
+        $post = $this->request->getVar();
+        if(empty($primaryId)){
+    		$this->model->filterUsr($this->username);
+            $post['urutan'] = count($this->model->find()) + 1;
+            $this->request->setGlobal("request", $post);
+        }   
+    }
+
     public function simpan($primary = '')
 	{
-		if ($this->request->isAJAX()) {
-			helper('form');
-			if ($this->validate($this->rules)) {
-
-                $post = $this->request->getVar();
-              
-				try {
-					$primaryId = $this->request->getVar($primary);
-
-                    $post = $this->request->getVar();
-                    if(empty($primaryId)){
-                        $post['urutan'] = count($this->model->find()) + 1;
-                        $this->request->setGlobal("request", $post);
-                    }
-                    
-					$entityClass = $this->model->getReturnType();
-					$entity = new $entityClass();
-					$entity->fill($this->request->getVar());
-
-					$this->model->transStart();
-					if ($primaryId == '') {
-						$this->model->insert($entity, false);
-						if ($this->model->getInsertID() > 0) {
-							$primaryId = $this->model->getInsertID();
-							$entity->{$this->model->getPrimaryKeyName()} = $this->model->getInsertID();
-						}
-					} else {
-						$this->model->set($entity->toRawArray())
-							->update($primaryId);
-					}
-
-					$this->model->transComplete();
-					$status = $this->model->transStatus();
-
-                    try {
-                        $dataMenu = [];
-                        $kategoriMenuModel = new KategoriMenuModel();
-                        $kategoriMenuModel->where(['ktmKtgId' => $primaryId])->delete();
-                        foreach ($this->request->getVar('menu') as $menuId) {
-                            $dataMenu[] = [
-                                'ktmKtgId' => $primaryId,
-                                'ktmMenuId' => $menuId,
-                            ];
-                        }
-
-                        $kategoriMenuModel->insertBatch($dataMenu);
-
-                    } catch (\Exception $ex) {
-                        $response =  $this->response(null, 500, $ex->getMessage());
-                        return $this->response->setJSON($response);
-                    }
-
-					$response = $this->response(($status ? $entity->toArray() : null), ($status ? 200 : 500));
-					return $this->response->setJSON($response);
-				} catch (DatabaseException $ex) {
-					$response =  $this->response(null, 500, $ex->getMessage());
-					return $this->response->setJSON($response);
-				} catch (\mysqli_sql_exception $ex) {
-					$response =  $this->response(null, 500, $ex->getMessage());
-					return $this->response->setJSON($response);
-				} catch (\Exception $ex) {
-					$response =  $this->response(null, 500, $ex->getMessage());
-					return $this->response->setJSON($response);
-				}
-			} else {
-				$response =  $this->response(null, 400, $this->validator->getErrors());
-				return $this->response->setJSON($response);
-			}
-		}
+        return parent::simpan($primary);
 	}
 
     public function findAll()

@@ -67,6 +67,16 @@ class MenuAplikasi extends BaseController
         }
     }
 
+    public function beforeSimpan($primaryId)
+    {
+        $post = $this->request->getVar();
+        if(empty($primaryId)){
+    		$this->model->filterUsr($this->username);
+            $post['urutan'] = count($this->model->find()) + 1;
+            $this->request->setGlobal("request", $post);
+        }   
+    }
+
     public function simpan($primary = '')
     {
         $file = $this->request->getFile("icon");
@@ -83,12 +93,6 @@ class MenuAplikasi extends BaseController
                 unset($this->rules['icon']);
             }
         }
-
-        $post = $this->request->getVar();
-        // if(empty($primary)){
-            $post['urutan'] = count($this->model->find()) + 1;
-            $this->request->setGlobal("request", $post);
-        // }
 
         return parent::simpan($primary);
     }
