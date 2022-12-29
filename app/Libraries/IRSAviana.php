@@ -21,12 +21,12 @@ class IRSAviana
      *
      * @param [type] $userToken
      */
-    public function __construct($user)
+    public function __construct($user, $usrId)
     {
         $pengaturan = new SettingModel();
 
-        $this->baseUrl = $pengaturan->getValue($pengaturan::API_URL_KEY);
-        $this->secretKey = $pengaturan->getValue($pengaturan::API_SECRET_KEY);
+        $this->baseUrl = $pengaturan->getValue($pengaturan::API_URL_KEY, $usrId);
+        $this->secretKey = $pengaturan->getValue($pengaturan::API_SECRET_KEY, $usrId);
 
         $this->noHp = md5($user['noHp'] ?? $this->secretKey);
 

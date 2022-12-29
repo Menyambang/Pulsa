@@ -36,8 +36,8 @@ class MyResourceController extends ResourceController
         helper("text");
 
         $this->user = count($request->fetchGlobal('decoded')) > 0 ? $request->fetchGlobal('decoded') : ['role' => '', 'filterIdentifier' => ''];
-        $this->irs = new IRSAviana(array_merge($this->user, $request->fetchGlobal('irs') ?? []));
         $this->usrId = $request->fetchGlobal('usr')['id'] ?? '';
+        $this->irs = new IRSAviana(array_merge($this->user, $request->fetchGlobal('irs') ?? []), $this->usrId);
 
 		date_default_timezone_set('Asia/Kuala_Lumpur');
     }

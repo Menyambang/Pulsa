@@ -46,8 +46,9 @@ class SettingModel extends MyModel
         return $res;
     }
 
-    public function getValue($key){
+    public function getValue($key, $usrId){
         $this->where('setKey', $key);
+        $this->where("setUsrId", $usrId);
         return $this->first()->value ?? '';
     }
 
