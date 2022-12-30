@@ -20,6 +20,7 @@ class UserWeb extends BaseController
        'nama' => ['label' => 'Nama', 'rules' => 'required'],
        'role' => ['label' => 'Role', 'rules' => 'required'],
        'password' => ['label' => 'Password', 'rules' => 'required'],
+       'apiKey' => ['label' => 'Api Key', 'rules' => 'required'],
    ];
 
     public function index()

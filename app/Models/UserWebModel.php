@@ -9,7 +9,7 @@ class UserWebModel extends MyModel
     protected $createdField = "usrwebCreatedAt";
     protected $updatedField = "usrwebUpdatedAt";
     protected $returnType = "App\Entities\UserWeb";
-    protected $allowedFields = ["usrwebUsername", "usrwebNama", "usrwebRole", "usrwebPassword","usrwebDeletedAt"];
+    protected $allowedFields = ["usrwebUsername", "usrwebNama","usrwebApiKey", "usrwebRole", "usrwebPassword","usrwebDeletedAt"];
 
     public function getReturnType()
     {

@@ -30,6 +30,11 @@
                         <input type="text" name="password" id="password" class="form-control readonly-background" placeholder="Password">
                         <p class="text-danger" id="er_password"></p>
                     </div>
+                    <div class="form-group mb-3">
+                        <label for="">Api Key</label>
+                        <input type="text" name="apiKey" id="apiKey" class="form-control readonly-background" placeholder="Api Key">
+                        <p class="text-danger" id="er_apiKey"></p>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm grey btn-outline-secondary" data-dismiss="modal">Batal</button>

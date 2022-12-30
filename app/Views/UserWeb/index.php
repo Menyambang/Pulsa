@@ -31,6 +31,7 @@
                                         <th width="20%">Username</th>
                                         <th width="20%">Nama</th>
                                         <th width="20%">Role</th>
+                                        <th width="20%">Api Key</th>
                                         <th width="15%">Aksi</th>
                                     </tr>
                                 </thead>
@@ -90,6 +91,7 @@
             $('[name="username"]').val(dataRow.username);
             $('[name="password"]').val('');
             $('[name="role"]').val(dataRow.role).trigger('change');
+            $('[name="apiKey"]').val(dataRow.apiKey).trigger('change');
         });
 
         $(document).on('click', '#btnHapus', function(e) {
@@ -205,6 +207,9 @@
                 },
                 {
                     data: 'role',
+                },
+                {
+                    data: 'apiKey',
                 },
                 {
                     data: 'username',

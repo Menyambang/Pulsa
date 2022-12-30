@@ -18,26 +18,26 @@ class Superadmin implements MenuInterface
                 'url' => 'Beranda',
                 'icon' => 'home',
             ],
-            [
-                'title' => 'Menu Aplikasi',
-                'url' => 'MenuAplikasi',
-                'icon' => 'menu',
-            ],
-            [
-                'title' => 'Kategori',
-                'url' => 'Kategori',
-                'icon' => 'list',
-            ],
-            [
-                'title' => 'Banner',
-                'url' => 'Banner',
-                'icon' => 'airplay',
-            ],
-            [
-                'title' => 'Running Text',
-                'url' => 'RunningText',
-                'icon' => 'wind',
-            ],
+            // [
+            //     'title' => 'Menu Aplikasi',
+            //     'url' => 'MenuAplikasi',
+            //     'icon' => 'menu',
+            // ],
+            // [
+            //     'title' => 'Kategori',
+            //     'url' => 'Kategori',
+            //     'icon' => 'list',
+            // ],
+            // [
+            //     'title' => 'Banner',
+            //     'url' => 'Banner',
+            //     'icon' => 'airplay',
+            // ],
+            // [
+            //     'title' => 'Running Text',
+            //     'url' => 'RunningText',
+            //     'icon' => 'wind',
+            // ],
             [
                     'title' => 'User',
                     'url' => '#',
@@ -53,17 +53,17 @@ class Superadmin implements MenuInterface
                         ],
                     ]
                 ],
-                [
-                    'title' => 'Pengaturan',
-                    'url' => '#',
-                    'icon' => 'settings',
-                    'children' => [
-                        [
-                            'title' => 'Aplikasi',
-                            'url' => 'Pengaturan'
-                        ],
-                    ]
-                ],
+                // [
+                //     'title' => 'Pengaturan',
+                //     'url' => '#',
+                //     'icon' => 'settings',
+                //     'children' => [
+                //         [
+                //             'title' => 'Aplikasi',
+                //             'url' => 'Pengaturan'
+                //         ],
+                //     ]
+                // ],
         ];
     }
 }
