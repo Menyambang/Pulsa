@@ -36,6 +36,9 @@ class AclModel extends Model
                 'User' => [0, 1, 0, 0],
                 'Broadcast' => [0, 1, 0, 0],
                 'LokasiCod' => [0, 1, 0, 0],
+                'Pengaturan' => [0, 1, 0, 0],
+                'MenuAplikasi' => [0, 1, 0, 0],
+                'RunningText' => [0, 1, 0, 0],
             ],
         ];
 

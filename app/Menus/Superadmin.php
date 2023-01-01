@@ -40,18 +40,9 @@ class Superadmin implements MenuInterface
             // ],
             [
                     'title' => 'User',
-                    'url' => '#',
+                    'url' => 'UserWeb',
                     'icon' => 'user',
-                    'children' => [
-                        [
-                            'title' => 'User Aplikasi Web',
-                            'url' => 'UserWeb'
-                        ],
-                        [
-                            'title' => 'User Terdaftar',
-                            'url' => 'User'
-                        ],
-                    ]
+                    
                 ],
                 // [
                 //     'title' => 'Pengaturan',

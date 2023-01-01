@@ -248,6 +248,7 @@ class User extends MyResourceController
             $entity->password = $entity->hashPassword($entity->password);
             $entity->activeCode = $uuidV4;
             $entity->otpCode = $otpCode;
+            $entity->usrId = $this->usrId;
 
             $irsRegister = $this->irs->register([
                 "pin" => $this->request->getVar('pin'),
@@ -292,11 +293,11 @@ class User extends MyResourceController
                     //     'usralIsFirst' => 1,
                     // ]);
                     
-                    $this->_waMessageOTP($entity->noWa, $otpCode);
-                    Notification::sendEmail($entity->email, 'Verifikasi', view('Template/email/verifikasi', [
-                        'nama' => $entity->nama,
-                        'key' => $uuidV4,
-                    ]));
+                    // $this->_waMessageOTP($entity->noWa, $otpCode);
+                    // Notification::sendEmail($entity->email, 'Verifikasi', view('Template/email/verifikasi', [
+                    //     'nama' => $entity->nama,
+                    //     'key' => $uuidV4,
+                    // ]));
 
                     return $this->response(null, ($status ? 200 : 500), ($status ? 'Akun berhasil didaftarkan, silahkan cek email atau Kode OTP pada WA anda untuk mengaktivasi akun anda' : null));
                 } else {

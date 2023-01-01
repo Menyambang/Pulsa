@@ -40,18 +40,18 @@ class Admin implements MenuInterface
             ],
             [
                     'title' => 'User',
-                    'url' => '#',
+                    'url' => 'User',
                     'icon' => 'user',
-                    'children' => [
-                        [
-                            'title' => 'User Aplikasi Web',
-                            'url' => 'UserWeb'
-                        ],
-                        [
-                            'title' => 'User Terdaftar',
-                            'url' => 'User'
-                        ],
-                    ]
+                    // 'children' => [
+                    //     [
+                    //         'title' => 'User Aplikasi Web',
+                    //         'url' => 'UserWeb'
+                    //     ],
+                    //     [
+                    //         'title' => 'User Terdaftar',
+                    //         'url' => 'User'
+                    //     ],
+                    // ]
                 ],
                 [
                     'title' => 'Pengaturan',

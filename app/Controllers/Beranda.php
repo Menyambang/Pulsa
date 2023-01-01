@@ -20,16 +20,17 @@ class Beranda extends BaseController
     {
         $userModel = new UserModel();
         $userModel->select('*');
+        $userModel->where('usrId', $this->username);
         $userModel->with(['alamat']);
         $userData = $userModel->where('usralIsFirst', 1)->find();
         
         $data = [
             'pengguna' => $userData,
             'card' => [
-                'jlhPengguna' => count($userData),
-                // 'jlhProduk' => $produkModel->countAllResults(),
-                // 'jlhStokHabis' => $produkModel->where(['produkStok' => 0])->countAllResults(),
-                // 'jlhStokSedikit' => $produkModel->where(['produkStok <' => 5])->countAllResults(),
+                'totalAgen' => count($userData),
+                'agenAktifToday' => 0,
+                'tokenSms' => 0,
+                'saldoIrsMarket' => 0,
             ],
         ];
 

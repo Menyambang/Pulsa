@@ -5,7 +5,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-6">
-                    <h3>User Terdaftar</h3>
+                    <h3>User</h3>
                 </div>
                 <div class="col-6">
                     <!-- <button class="btn btn-sm btn-primary pull-right" id="btnTambah" data-toggle="modal" data-target="#modal"><i class="fa fa-plus"></i> Tambah</button> -->
